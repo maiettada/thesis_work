@@ -1,0 +1,61 @@
+% !TEX encoding = IsoLatin 
+
+% Affinché gli accenti vengano accettati, assicurati che la codifica di questo file
+% sia ISO 8859-1
+
+% PER OTTENERE IL PDF, digitare da terminale
+% ./makepdfplease
+% 
+
+
+
+
+\section{Impiego delle regular expression}
+\subsection{Difficoltà insite nelle regex}
+Le espressioni regolari sono usatissime nel mondo della programmazione: 
+si stima che siano utilizzate in \say{più di un terzo dei progetti Python e Javascript}[cita R.A.H.].
+La loro grande diffusione non vuol dire però che costituiscano una tecnologia sicura da utilizzare, poiché presentano
+problematiche di leggibilità, scarsità di documentazione, difficile manutenibilità e problemi di sicurezza non da poco conto.
+\paragraph{Leggibilità: } un grave problema delle regex è che, rappresentando dei pattern alfanumerici sintetizzati all'estremo, risultino incomprensibili alla lettura; gli sviluppatori non sono immuni a questo problema ed anche per 
+loro risalire al pattern alfanumerico partendo da una regex può essere un compito scomodo.
+\paragraph{Documentazione: } nel mondo della programmazione è consolidata la pratica di documentare i passaggi meno 
+leggibili di un algoritmo; nel caso delle regular expression, queste sono inserite negli algoritmi sotto forma di stringhe e ciò può influenzare il modo in cui gli sviluppatori le documentano:
+\begin{itemize}
+\item in alcuni IDE è disponibile la syntax highlighting per evidenziare i diversi "componenti" della regex;
+\item alcuni sviluppatori trovano comodo "spezzare" la regex su più linee di codice;
+questo consentirebbe di documentare linea per linea ogni "componente" della regex, ma non tutti i linguaggi lo permettono.
+\end{itemize}
+Infine molti sviluppatori esperti considerano le regex come "self-documenting"[cita R.A.H.] e si rifiutano dunque di documentarle, contribuendo a renderle problematiche dal punto di vista della documentazione.
+\paragraph{Manutenibilità: } quando la leggibilità è scarsa e la documentazione è insufficiente, è giocofòrza che 
+qualsiasi modifica apportata a una regex possa, oltre ad includere nuovi pattern desiderati, escludere erroneamente
+e involontariamente tutta una serie di pattern che prima erano correttamente rilevati.
+\paragraph{Denial Of Service: } l'algoritmo di Spencer con cui sono implementate molte \textbf{regex engine}, soffre di una
+worst-case time complexity che può diventare esponenziale in alcuni casi di NFA non deterministici[cita regex engines]. Sebbene tale vulnerabilità esponga i server ad attacchi di \textbf{ReDoS}, gli sviluppatori software spesso non hanno la minima formazione su tale problema.
+
+
+\subsection{Regex: quando conviene usarle}
+Abbiamo visto finora quanto le regex possano essere un buono strumento software, ma anche presentare problematiche molto
+critiche; la comunità dei programmatori ha persino coniato il detto \textit{"Now you have two problems"}[cita], che esprime come le soluzioni software basate su regex, lungi dall'essere considerate affidabili, creino ulteriori problemi 
+a causa della gestione delle regex stesse.
+Nello studio \textit{"How to invest my time"} [cita HtimT] gli autori, ben consapevoli di quanto le regex siano complesse 
+ed error-prone, si domandano \textit{fino a che punto} possano essere usate vantaggiosamente;
+più in particolare il loro studio si cala nel contesto della Entity Extraction e si pone l'obiettivo di usare al m
+meglio le risorse umane, studiando due attività diverse e complementari:
+\begin{itemize}
+\item lo sviluppo di regex;
+\item l'annotazione manuale di dati.
+\end{itemize}
+Entrambe le attività umane sono volte all'addestramento di una rete neurale: la prima, producendo annotazioni con l'uso 
+della regex; la seconda, lasciando all'operatore umano la creazione di annotazioni, che possono essere usate sia per l'addestramento della rete neurale, sia per un successivo fine-tuning della rete neurale.
+I risultati sperimentali di questo studio mostrano che:
+\begin{itemize}
+\item se il tempo da investire nella EE è poco (inferiore ai 40 minuti), conviene che l'operatore si limiti a produrre una regex;
+\item se il tempo è molto (superiore ai 40 minuti), l'operatore potrebbe spendere tutto il tempo a sua disposizione per creare annotazioni con cui istruire la rete neurale;
+\item tra i due casi estremi, può convenire che l'operatore umano spenda pochi minuti per creare una regex per un primo setup di rete neurale, per poi aggiungervi annotazioni manuali per farne fine-tuning.
+\end{itemize}
+Questo approccio che contempla le azioni umane in un sistema automatico da addestrare e perfezionare è detto \textbf{Human In The Loop}.  
+
+%\subsection{ML-based}
+
+
+%\subsection{human in the loop}

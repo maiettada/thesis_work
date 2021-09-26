@@ -1,0 +1,7 @@
+#!/bin/sh
+pdflatex maietta.tex
+bibtex maietta.aux
+pdflatex maietta.tex
+pdflatex maietta.tex && xdg-open maietta.pdf
+rm *.toc *.aux *.log *.out
+xdg-open maietta.pdf
