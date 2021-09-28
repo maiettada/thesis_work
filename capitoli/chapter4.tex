@@ -1,0 +1,261 @@
+% !TEX encoding = IsoLatin 
+
+% Affinché gli accenti vengano accettati, assicurati che la codifica di questo file
+% sia ISO 8859-1
+
+% PER OTTENERE IL PDF, digitare da terminale
+% ./makepdfplease
+% 
+
+In questa sezione andremo a illustrare come sono stati realizzati i due approcci di Named Entity Recognition:
+\begin{itemize}
+\item con le tradizionali tecniche di programmazione e con l'uso di espressioni regolari;
+\item con tecniche di Machine Learning.
+\end{itemize}
+
+\section{Uso di regex}
+Il prototipo in questione ha come obiettivo la ricerca di attestazioni SOA all?interno di un testo. Nello specifico, il prototipo adopera tecniche di programmazione tradizionale, usando degli script Python ed effettuando ricerche di stringhe con espressioni regolari
+
+\paragraph{Formulazione del problema:}
+\textit{
+Dato un insieme di documenti in formato testuale appartenenti al dominio delle gare d'appalto, estrarre le attestazioni SOA ivi menzionate.
+}
+
+\subsection{Accesso ai documenti del dataset}
+
+Il dataset dei documenti di gare d'appalto è implementato con un file csv. 
+Tale file dunque descrive ogni documento come campi comma-separated; alcuni di questi campi sono l'id del documento, il testo del documento, il cig del bando, lo score della classificazione.
+Per l'acquisizione di dati si è adoperata la libreria Pandas: questa consente di convertire i dati testuali comma-separated in un apposito oggetto Pandas Dataframe.
+%id_file,testo,concat,m_autore,m_data_creazione,m_data_ultima_modifica,m_pagine,numero_cig,id_tipo,score_classificazione,tipo
+\begin{Verbatim}
+dataframe = pd.read_csv(filepath, sep=',')
+\end{Verbatim}
+
+Una volta importato il csv in un dataframe, accedo al dataframe esattamente come se fosse una matrice; di seguito il codice per stampare il primo elemento del campo testo:
+
+\begin{Verbatim}
+print(dataframe['testo'][0])
+\end{Verbatim}
+
+Una volta estratti gli elementi di testo del dataframe, posso applicare le espressioni regolari alla ricerca delle attestazioni SOA su ogni singolo testo.
+
+\subsection{Regex, raccolta e filtraggio di istanze}
+L'individuazione e la classificazione di attestazioni SOA da un testo richiedono due azioni: 
+\begin{enumerate}
+\item Raccolta delle istanze: trovare una porzione di testo che abbia la struttura di un valore SOA;
+\item Filtraggio delle istanze: verificare che quel dato corrisponda ad una attestazione SOA valida.
+\end{enumerate}
+Per dare un esempio, posso coprire la prima azione con una regex minimale che descriva la categoria come \say{OS} seguito da due cifre:
+ 
+\begin{Verbatim}
+regex_categoria = r'O(S|G)(\d\d?)'
+\end{Verbatim}
+
+Ciò non ci assicura di avere una categoria valida: ad esempio OS99 fa match con la regex,
+ma non è una categoria valida, poiché le opere specialistiche si fermano alla OS35.
+Similmente, le opere generali si fermano alla OG13; la regex banale mostrata in quest'ipotesi cattura benissimo un'istanza di testo come \say{OG14}, che però non esiste nell'insieme delle categorie.
+La seconda azione consiste quindi nel verificare l'esistenza della stringa nell'insieme Categorie e in tal caso classificarla come tale.
+
+L'ultimo punto da introdurre è la normalizzazione delle istanze individuate:
+è infatti possibile che l'entità \say{Opera Specialistica numero 1} abbia in pratica scritture diverse, come \say{OS1}, \say{O.S.1}, \say{O.S.-1} e così via, a seconda dello stile di scrittura di chi ha redatto un documento. Per quanto una buona regex possa raccogliere tutte queste istanze e pur essendo tutte queste istanze valide, il prototipo in questione darà ai dati individuati una forma \textbf{normalizzata} ovvero standardizzata.
+
+Infine la procedura svolta è descrivibile a grandi linee come segue:
+\begin{enumerate}
+\item Nei punti di interesse, si individua una porzione di testo o \textit{finestra}, all'interno della quale si cercano le attestazioni;
+\item internamente alla finestra si applicano le espressioni regolari relative a categoria SOA e classifica SOA;
+\item i risultati trovati vengono posti in una forma standard o \textit{normalizzata} e filtrati rispetto al dizionario dei valori SOA. 
+\end{enumerate}
+
+
+
+
+\subsection{Ricerca e classificazione delle attestazioni SOA}
+\begin{enumerate}
+\item identifico una finestra di testo di mio interesse; 
+\item all'interno della finestra ricerco istanze delle singole categorie e classifiche;
+\item per ogni categoria c individuata, effettuo la normalizzazione normalised\_category(c),
+   per cui di quella categoria verrà preso il nome standard;
+   ad esempio normalised\_category(\say{og1})  e  normalised\_category(\say{OG 1}) restituiranno entrambe il valore normalizzato \say{OG-1};
+\item effettuo un filtraggio sulle categorie finora ottenute:
+   se, ad esempio, la regex ammette una categoria come \say{OS-99}, questa non fa parte della lista di categorie SOA "conosciute"   e viene dunque rigettata;
+\item effettuo una normalizzazione delle classifiche economiche;
+\item concateno categoria SOA e classifica economica trovata; dunque ho a disposizione l'attestazione per intero;
+\item per ogni "finestra" di testo, raccolgo le attestazioni individuate e relativi offset (start\_offset, end\_offset) interni al documento;
+\item Scrivo l'ouput in un apposito file csv. Per ogni finestra di testo,
+   stampo istanze SOA individuate e relative coppie (start\_offset, end\_offset).
+\end{enumerate}
+L'output di questo prototipo-regex mostra delle limitazioni e dei casi tipici di errore:
+in alcune istanze testuali può capitare che una categoria sia menzionata con un nome leggermente diverso da quello canonico (ad es. \say{OS-18}, laddove le alternative accettabili sono \say{OS-18A} e \say{OS-18B}).
+In questi casi il filtering, la normalizzazione e anche le regex possono essere leggermente modificate per riconoscere come accettabili tali valori testuali; però modifiche ripetute alle regex possono portare le stesse a diventare incomprensibili e ad essere error-prone.
+
+In definitiva, le regex hanno il vantaggio di produrre dei risultati immediati, ma non molto adatti a testi troppo variegati
+Di seguito do un po' di dettagli sulle regex usate relativamente alle categorie e alle classifiche economiche.
+
+
+\subsection{Finestre, espressioni regolari, filtering}
+
+La Finestra di caratteri è selezionata nel modo seguente:
+la presenza di una delle stringhe \{ \say{OS}, \say{Os}, \say{OG}, \say{Og} \} costituisce l'inizio della finestra;
+successivamente vengono selezionati 100 caratteri.
+Regex adoperata:
+\begin{Verbatim}
+from_os_n_char = r'O(S|G|s|g).{1,100}'
+\end{Verbatim}
+
+Ricerca  delle categorie SOA operata internamente alla finestra:
+la presenza di una delle stringhe \{ \say{OS}, \say{Os}, \say{OG}, \say{Og} \} costituisce l'inizio della presunta attestazione;
+la stringa deve continuare con un separatore e al più due cifre decimali (ad es. \say{Os-98}, \say{Os-5} )
+la stringa può continuare con una lettera, che ci si aspetta essere la sottocategoria \{ \say{A}, \say{B}  \}; ad esempio è accettabile una stringa del tipo \say{OS-18A}.
+Con le dovute cautele sui vari tipi di carattere separatore \{\say{-},\say{.}, \} e volendo tollerare eventuali caratteri di andata a capo, ottengo l'espressione regolare:
+
+\begin{Verbatim}
+cat\_regex = r'O(S|G|s|g)\n?[-\s]?\n?(\d\d?\w?)'
+\end{Verbatim}
+ 
+\paragraph{Normalizzazione delle categorie:}
+Viene svolta con regex-substitution;
+seleziona la dicitura \{ \say{OS}, \say{Os}, \say{OG}, \say{Og} \} e il gruppo (dd?w?) costituito dal numero e dalla sottocategoria \say{a}/\say{b}.
+Ad esempio: le istanze 
+
+\begin{Verbatim}
+"OS 10" , "OS<tab>10" e "OS\n10"
+\end{Verbatim}
+con la normalizzazione assumono la stessa forma OS-10.
+
+
+\paragraph{Filtering:} seleziona le attestazioni \textit{sensate} in quanto contenute nel relativo dizionario. È infatti possibile che un'attestazione sia accettabile per la regex (ad es. OS-77) ma non abbia senso nel dominio delle categorie SOA.
+
+\paragraph{Ricerca di classifiche economiche:}
+numeri romani;
+mi assicuro che le lettere siano effettivamente numeri piuttosto che inizi di parole
+(e.g. la \say{I} maiuscola in \say{OS-12 Importo uguale a } non va considerata un match con la
+ classifica I )
+Regex adoperata:
+
+\begin{Verbatim}
+class\_regex ='(IV bis|IV|III|II|IX|VIII|VII|VI|X|V|I)[^\w]'
+\end{Verbatim}
+ 
+
+
+
+\subsection{Errori comuni riportati}
+
+Dovendo valutare l'output del prototipo, raccolgo qui gli errori raggruppandoli in alcune categorie principali. 
+Dalla tabella contenuta nel  foglio di calcolo condiviso  si possono vedere le corrispondenze tra input e output, compresi i casi di errore.
+Per questo report stati considerati i primi 100 elementi della tabella soa.csv
+
+
+Gli errori riportati sorgono in maniere diverse: alcuni nascono a livello di regex, alcuni casi sono causati dallo script e dal dizionario fissato nello script; altri ancora dipendono da particolarità del documento.
+
+Categoria non acquisita:
+\begin{Verbatim}
+1. riga   657,  OS "I                
+   riga 1181, OGI I si ? 105.541,05 | 62,901%| prevalente | Subappaltabile;
+   riga 790, OG1IV bis e categoria scorporabile a;
+   riga 792, OG1III e categoria scorporabile a;
+
+2. riga 130, "OG  11 di cui"; 
+   riga 540, OS   21; altre simili: 541,542
+3. riga 135, "OS 12-A, OS 18-A, OS 21  e  OS  2-A"; altre: 382,487, 1159, 1160,1176,1248;
+4. riga 143, "OS.2"; altre: 145, 148, 254;
+\end{Verbatim}
+
+\paragraph{Motivazioni:} 
+\begin{enumerate}
+\item caratteri estranei a quelli previsti dalla regex;
+\item spaziature non previste nella  soa\_cat\_regex;
+\item nella  cat\_regex il match avviene correttamente solo con "OS-12A"; non è previsto il carattere "-" prima della lettera "A";
+\item nella  cat\_regex non è previsto il carattere di interpunzione \say{.}
+\end{enumerate}
+
+Classifica non acquisita:
+
+\begin{Verbatim}
+1. riga 61, "OS21 nella classe I.";
+   riga 124,"OG 3 classifica II;";
+   riga 371, "OG 3 classifica I;";
+   riga 416, OG 12 III;
+   riga 1251, OG 3 classifica V;        
+   riga 1262, OG1 Classifica I;
+2. riga 825,  "OG1 V OS3 VE OS28IV BIS"     
+\end{Verbatim}
+
+\paragraph{Motivazioni:} 
+\begin{enumerate}
+\item errore lato script: lo script seleziona una sottostringa con il carattere finale mancante, causando il mancato match con la class\_regex;
+\item "OS3 VE" (dove VE indica "V classifica Economica") non è previsto dalla regex della classifica.
+\end{enumerate}
+
+Sottoclassifica non acquisita:
+1.riga 125, "OS21       |IIIBis     |        ", 'OS-21-?';
+2.riga 127, "OS21    classifica    III   Bis ", ?OS-21-III';
+  riga 302, "dunque in class. III-bis", viene assunta classifica III; altre: 305,372,374
+  riga 338, "IV-bis" assunto come IV; simili: 339,341,827;
+
+motivazioni: 
+\begin{enumerate}
+\item la class\_regex non accetta "IIIBis" come classifica;
+\item la class\_regex accetta solo la dicitura "IV bis".
+\end{enumerate}
+
+Accettate dalla regex inizialmente, ma scartate perché assenti nel dizionario:
+\begin{Verbatim}
+riga 61, "OS 18", "OS18" e simili; altre istanze simili: 177,183,195
+  riga 132, "OS  2"; altre: 134, 147,150,151,248
+  riga 131, " OS 12, OS 18,"; altre: 133, 378,379,380,381
+  riga 260, "OS12 anziché OS12B in quanto" , OS12 non accettato dal filtering; altre:      265,1253;
+  riga 705, ["Os28" si chiede la ], viene estratto Os-28, la "s" minuscola non è accettata dal filtering.
+\end{Verbatim}
+\paragraph{Motivazioni:} 
+sono considerate valide le forme "OS-2A" e "OS-2B", "OS-12A" e "OS-12B",  "OS-18A" e "OS-18B", "OS-20A" e "OS-20B"; assenti nel dizionario, invece, le categorie prive di specifica A/B ("OS-2", "OS-12", "OS-18", "OS-20").
+
+
+
+Valori erronei di classifica economica
+\begin{Verbatim}
+1. Numero romano estraneo
+  riga 802, "OG1" per l'intero importo dell'appalto (e ovviamente per il Lotto II;
+  riga 803, OS14" per il lotto II ;        
+  riga 804, OS22" per il lotto III o eventualmente ricorrere ad ATI o avvalimento?;
+2. Altre maiuscole non relative a classifica
+  riga 1100, "OS13 (S.I.O.S. scorporabile e subappaltabile max 30%)        
+3. Caratteri estranei
+  riga 828, "OS24 II, OS261 E OS 33 Il) e Visura Camerale e certificazione ISO 9001:2008 ISO 18001:2007       \end{Verbatim}  
+
+
+\subsection{Considerazioni}
+
+Gli errori rilevati nell'output - come detto precedentemente - sorgono in diversi punti della logica utilizzata e hanno livelli di problematicità differenti:
+\begin{itemize}
+\item un bug nello script: se sistematico, può essere corretto facilmente;
+\item un valore assente a livello di dizionario: questo comporta delle decisioni sui valori del dominio; se trovo la stringa "OS-18",  è sensato supporre che si stia parlando di OS-18A?  o forse è possibile che l'autore sottointendesse un valore "OS-18B" dopo averlo precedentemente menzionato?
+\end{itemize}
+A livello di regex è possibile apportare modifiche per fare match dei casi più particolari, però si pongono due problemi:
+\begin{itemize}
+\item  dopo aver adattato la regex ad un nuovo caso particolare, questa potrebbe non accettare alcuni casi che facevano match in precedenza; dunque ad ogni modifica è necessario ricontrollare esaustivamente tutti gli output - compresi quelli che erano processati bene prima delle modifiche;
+\item  eccessiva complessità della regex: dopo pochi rimaneggiamenti, l'espressione regolare diventa
+tendenzialmente incomprensibile, per cui future correzioni e modifiche diventano più difficili ed error-prone.\end{itemize}
+In generale i documenti esaminati usano un linguaggio naturale; è quindi possibile -nonostante la natura tecnica dei discorsi-  che un documento da processare contenga attestazioni SOA trascritte in maniere differenti, non note a priori (Ad es. "OS11", "Opere specialistiche, categoria 11", "Op.Sp. 11"), dettate essenzialmente dallo stile dell'autore.
+
+
+Dunque, in un documento potrebbe esserci una trascrizione nuova da adottare; e l'ideale sarebbe aggiungerla in maniera incrementale alla casistica di trascrizioni già adottate in precedenza.
+A livello di regex l'approccio incrementale non è per nulla agevole: si deve scrivere una regex nuova, che aggiunga i nuovi casi rilevati senza compromettere quelli precedenti.
+La nuova regex deve essere dunque testata sia sulla casistica di valori nuovi  sia sulla casistica vecchia.
+Infine, rimane il problema che la regex non mi consente di delineare un contesto, ad es.:
+nella stringa "OS14 per il lotto II"  la class\_regex troverà un numero romano ("II", appunto) e lo assumerà erroneamente come valore di classifica.
+Risolvere questo singolo caso a livello regex -nello specifico, escludere i numeri romani dopo la parola  "lotto"- comporta espressioni regolari più complesse, ma non esclude ulteriori  casi di falso-positivo.
+
+
+\subsection{Superare l'approccio regex a priori}
+In estrema sintesi, la criticità principale dell'approccio usato è 
+affidare il riconoscimento del valore-stringa ad un criterio fissato a priori.
+L'approccio ideale dovrebbe consentire all'operatore umano di aggiungere istanze alla casistica già presente, in modo da:
+\begin{itemize}
+\item avere a disposizione l'interpretazione umana nei casi in cui l'automa riconoscitore della regex fraintenda un input;
+\item raccogliere tali istanze in maniera incrementale, in modo che il loro accumularsi costituisca una forma di esperienza applicabile automaticamente ai successivi input.
+\end{itemize}
+
+L'esperienza acquisita fondamentalmente permetterebbe di confrontare l'input non con un singolo pattern a priori -che nell'esempio specifico è una regex, ma potrebbe anche essere definito in maniera procedurale- ma con un insieme di più pattern, incrementabili a discrezione dell'operatore umano per catturare anche le istanze meno standardizzabili del linguaggio.
+
+

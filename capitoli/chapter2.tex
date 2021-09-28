@@ -16,7 +16,7 @@
 Finora sono state descritte le attestazioni SOA ed è stato chiarito il ruolo fondamentale che queste certificazioni ricoprono negli appalti.
 D'ora in avanti si intende descrivere l'uso di queste attestazioni da parte dei vari attori del mondo degli appalti:
 \begin{enumerate}
-  \item la \textbf{Pubblica Amministrazione}: produce il bando di gara, relativo ad un progetto identificato univocamente dal codice CUP ed eventualmente diviso in lotti, ognuno identificato da un codice CIG; nel bando di gara aggiunge i requisiti di Categorie SOA e le Classifiche economiche SOA, imponendo eventualmente vincoli temporali su tali certificati (?L'azienda deve risultare in possesso di tale certificato dal 2020?); il bando viene scritto in formato pdf e pubblicato sul sito dell'ente pubblico ( Comune, Provincia, Regione, Ministero, et cetera), che risulta in questo contesto essere l'appaltante;
+  \item la \textbf{Pubblica Amministrazione}: produce il bando di gara, relativo ad un progetto identificato univocamente dal codice CUP ed eventualmente diviso in lotti, ognuno identificato da un codice CIG; nel bando di gara aggiunge i requisiti di Categorie SOA e le Classifiche economiche SOA, imponendo eventualmente vincoli temporali su tali certificati (\say{L'azienda deve risultare in possesso di tale certificato dal 2020}); il bando viene scritto in formato pdf e pubblicato sul sito dell'ente pubblico ( Comune, Provincia, Regione, Ministero, et cetera), che risulta in questo contesto essere l'appaltante;
 \item l'\textbf{imprenditore}, o qualsivoglia candidato appaltatore: naviga i siti web della Pubblica Amministrazione alla ricerca di bandi di gara; per ogni bando di gara trovato, deve comprendere i requisiti SOA e accertarsi di poterli soddisfare; solo se dotato di idonea attestazione, potrà candidarsi ad essere appaltatore prendendo parte alla gara d'appalto.
 \end{enumerate}
 Sia chiaro che la P.A. pubblica anche altre tipologie di documenti, per cui è utile precisare che ci riferiamo a quell'insieme di documenti che descrivono gare e verbali d'appalto:  possiamo riferirci a questo insieme chiamandolo dominio d'appalto.
@@ -36,31 +36,58 @@ Dato un insieme di documenti in formato testuale appartenenti al dominio delle g
 L'impostazione del problema inizia con la definizione degli insiemi di valori possibili;
 nel caso delle attestazioni SOA, seguendo la tassonomia esposta definiamo l'insieme delle Categorie e l'insieme delle Classifiche:
 \begin{center}
-Categorie = \{\say{OG-1}, \say{OG-2}, \say{OG-3}, \say{OG-4},
+Categorie = \{\say{OG-1} , \say{OG-2}, \say{OG-3}, \say{OG-4},
  \say{OG-5},\say{OG-6},\say{OG-7},\say{OG-8},
+\end{center}
+%\begin{center} \end{center} for each line to be displayed
+\begin{center}
  \say{OG-9},\say{OG-10},\say{OG-11},\say{OG-12},
  \say{OG-13}, \say{OS-1},\say{OS-2A},\say{OS-2B},
  \say{OS-3},
- 
+\end{center}
+\begin{center}
  \say{OS-4},\say{OS-5},\say{OS-6},
  \say{OS-7},\say{OS-8},\say{OS-9},\say{OS-10},
  \say{OS-11},\say{OS-12A},
- 
+\end{center}
+\begin{center}
  \say{OS-12B}, \say{OS-13},
  \say{OS-14},\say{OS-15},\say{OS-16},\say{OS-17},
  \say{OS-18A},\say{OS-18B},
- 
+\end{center}
+\begin{center}
  \say{OS-19},
  \say{OS-20A},
  \say{OS-20B},\say{OS-21},\say{OS-22},\say{OS-24},
  \say{OS-25}, \say{OS-26}, 
- 
+\end{center}
+\begin{center}
  \say{OS-27}, \say{OS-28},
  \say{OS-29}, \say{OS-30}, \say{OS-31}, \say{OS-32},
  \say{OS-33}, \say{OS-34}, 
  \say{OS-35} \}
 \end{center}
-
+%\parbox{\textwidth}{
+%Categorie = \{\say{OG-1} , \say{OG-2}, \say{OG-3}, \say{OG-4},
+% \say{OG-5},\say{OG-6},\say{OG-7},\say{OG-8},\\
+% \say{OG-9},\say{OG-10},\say{OG-11},\say{OG-12},
+% \say{OG-13}, \say{OS-1},\say{OS-2A},\say{OS-2B},
+% \say{OS-3},\\
+% \say{OS-4},\say{OS-5},\say{OS-6},
+% \say{OS-7},\say{OS-8},\say{OS-9},\say{OS-10},
+% \say{OS-11},\say{OS-12A},\\
+% \say{OS-12B}, \say{OS-13},
+% \say{OS-14},\say{OS-15},\say{OS-16},\say{OS-17},
+% \say{OS-18A},\say{OS-18B},\\
+% \say{OS-19},
+% \say{OS-20A},
+% \say{OS-20B},\say{OS-21},\say{OS-22},\say{OS-24},
+% \say{OS-25}, \say{OS-26}, \\
+% \say{OS-27}, \say{OS-28},
+% \say{OS-29}, \say{OS-30}, \say{OS-31}, \say{OS-32},
+% \say{OS-33}, \say{OS-34}, 
+% \say{OS-35} \}
+% }
 \begin{center}
 Classifiche = \{\say{I}, \say{II}, \say{III}, \say{IV}, \say{IV-bis}, \say{V}, \say{VI}, \say{VII}, \say{VIII} \};
 \end{center}
