@@ -11,8 +11,7 @@
 
 
 
-\section{Casi d'uso reali}
-\subsection{}
+%\section{Casi d'uso delle attestazioni SOA}
 Finora sono state descritte le attestazioni SOA ed è stato chiarito il ruolo fondamentale che queste certificazioni ricoprono negli appalti.
 D'ora in avanti si intende descrivere l'uso di queste attestazioni da parte dei vari attori del mondo degli appalti:
 \begin{enumerate}
@@ -32,7 +31,7 @@ Dato un insieme di documenti in formato testuale appartenenti al dominio delle g
 }
 
 \section{Impostazione del problema}
-\subsection{Insiemi di valori}
+%\subsection{Insiemi di valori}
 L'impostazione del problema inizia con la definizione degli insiemi di valori possibili;
 nel caso delle attestazioni SOA, seguendo la tassonomia esposta definiamo l'insieme delle Categorie e l'insieme delle Classifiche:
 \begin{center}
@@ -125,9 +124,11 @@ Ogni output del sistema verrà valutato in termini di TP-FP-TN-FN; questo permett
 \section{Ground truth}
 Per ogni istanza di testo assegnato ad una classe, bisogna affermare se la classificazione data costituisce true positive, false positive, true negative o false negative; questo vuol dire che, per valutare la bontà di una classificazione, abbiamo bisogno di stabilire quale sia la classificazione giusta.
 Il sistema che stiamo considerando effettua un'estrazione di dati, classificandoli come elementi delle attestazioni SOA; per valutare la bontà del sistema abbiamo dunque bisogno di stabilire per ogni porzione di testo l'output giusto, ovvero di definire la \textbf{verità} in base alla quale valutare il sistema.
-La \textbf{Ground Truth} è dunque definita come l'output corretto che ci si aspetterebbe dal sistema; e come tale indicherà, per ogni porzione di documento, l'attestazione "giusta" che il sistema avrebbe dovuto estrarre.
+La \textbf{Ground Truth} è dunque l'output corretto che ci si aspetterebbe dal sistema; e come tale indicherà, per ogni porzione di documento, l'attestazione "giusta" che il sistema avrebbe dovuto estrarre.
+Un sistema di apprendimento dotato di Ground Truth appartiene all'approccio detto \textbf{Apprendimento Supervisionato}. 
 La ground truth verrà poi confrontata con l'output del sistema e permetterà di classificare ogni tupla dell'output come true positive, false positive, true negative, false negative.
 Una volta contrassegnata ogni tupla dell'output come tp/fp/tn/fn, sarà possibile calcolare Precision, Recall e Accuracy.
+
 
 \section{Tecniche di estrazione}
 Di seguito si espongono due approcci principali per l'estrazione di dati:
