@@ -46,6 +46,12 @@
 % solo caratteri a 7 bit (ASCII) nei file d'entrata.
 %
 \usepackage[latin1]{inputenc}% IMPORTANTE! usare codifica ISO-8859-1 per le lettere accentate
+\usepackage{titlesec}
+\usepackage{lipsum}
+
+
+
+
 
 \input{commands.tex}
 \usepackage{dirtytalk}
@@ -152,37 +158,36 @@ Opzionali, solo nel caso si sia ricevuto un aiuto speciale e particolarmente ril
 
 \mainmatter
 
-%\chapter{1}
+%\section{1}
 %\input{capitoli/1-introduzione.tex}
 
 
-\chapter{Estrazione di dati da testi della pubblica amministrazione}
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{}{0pt}{\Large}
+
+\chapter[Estrazione di dati da testi della pubblica amministrazione][]{1. Estrazione di dati da testi della pubblica amministrazione}
 \input{capitoli/chapter1.tex}
-\label{chap:1}
+%\label{chap:1}
 
-
-\section{Casi d'uso delle attestazioni SOA}
+\chapter[Casi d'uso delle attestazioni SOA][]{2. Casi d'uso delle attestazioni SOA}
 \input{capitoli/chapter2.tex}
-\label{chap:2}
 
-\section{Impiego delle regular expression}
+\chapter[Impiego delle regular expression][]{3. Impiego delle regular expression}
 \input{capitoli/chapter3.tex}
-\label{chap:3}
 
-\section{Realizzazione dei prototipi}
+\chapter[Realizzazione dei prototipi][]{4. Realizzazione dei prototipi}
 \input{capitoli/chapter4.tex}
-\label{chap:3}
 
-%\chapter{5}
-%\input{capitoli/5-design.tex}
+\chapter[Tecniche di Machine Learning][]{5. Tecniche di Machine Learning}
+\input{capitoli/chapter5.tex}
 
-%\chapter{6}
+%\section{6}
 %\input{capitoli/6-implementazione.tex}
 
-%\chapter{7}
+%\section{7}
 %\input{capitoli/7-testing.tex}
 
-%\chapter{8}
+%\section{8}
 %\input{capitoli/8-conclusioni.tex}
 
 

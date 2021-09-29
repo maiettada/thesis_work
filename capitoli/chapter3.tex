@@ -11,7 +11,7 @@
 
 
 %\section{Impiego delle regular expression}
-%\subsection{Difficoltà insite nelle regex}
+%\section{Difficoltà insite nelle regex}
 Le espressioni regolari sono usatissime nel mondo della programmazione: 
 si stima che siano utilizzate in \say{più di un terzo dei progetti Python e Javascript} \cite{RegexesAreHard}.
 La loro grande diffusione non vuol dire però che costituiscano una tecnologia sicura da utilizzare, poiché presentano
@@ -33,7 +33,7 @@ e involontariamente tutta una serie di pattern che prima erano correttamente ril
 worst-case time complexity che può diventare esponenziale in alcuni casi di NFA non deterministici \cite{regexEngines}. Sebbene tale vulnerabilità esponga i server ad attacchi di \textbf{ReDoS}, gli sviluppatori software spesso non hanno la minima formazione su tale problema.
 
 
-\subsection{Regex: quando conviene usarle}
+\section{Regex: quando conviene usarle}
 Abbiamo visto finora quanto le regex possano essere un buono strumento software, ma anche presentare problematiche molto
 critiche; la comunità dei programmatori ha persino coniato il detto \textit{"Now you have two problems"}\cite{nowTwoProblems}, che esprime come le soluzioni software basate su regex, lungi dall'essere considerate affidabili, creino ulteriori problemi 
 a causa della gestione delle regex stesse.
@@ -55,7 +55,7 @@ I risultati sperimentali di questo studio mostrano che:
 \end{itemize}
 Questo approccio che contempla le azioni umane in un sistema automatico da addestrare e perfezionare è detto \textbf{Human In The Loop}.  
 
-\subsection{Deep Learning con Human-In-The-Loop}
+\section{Deep Learning con Human-In-The-Loop}
 Nel campo della Named Entity Recognition(NER) i metodi di Deep Learning hanno un discreto successo,
 perché richiedono un'ingegnerizzazione limitata \cite{ImprovingNE}; allo stesso tempo 
 però hanno bisogno di grandi quantità di dati, quindi richiedono la produzione di dati di training.
@@ -73,7 +73,7 @@ Il risultato della revisione viene inviato al framework;
 In definitiva l'approccio \textbf{Human In The Loop} è senz'altro promettente per la costruzione di dataset e per il training di modelli NER sempre più accurati. 
 
 
-\subsection{Liste di dati da documenti sottoposti a OCR}
+\section{Liste di dati da documenti sottoposti a OCR}
 Altro interessante contributo al Natural Language Processing è lo studio di Packer et al.\cite{costeffective},
 in cui si propone il funzionamento del software ListReader per l'acquisizione di dati da documenti sottoposti ad OCR.
 Più nello specifico ListReader acquisisce \textbf{liste} di dati; spetta ad un utente utilizzare l'interfaccia grafica 

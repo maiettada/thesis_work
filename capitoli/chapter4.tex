@@ -21,7 +21,7 @@ Il prototipo in questione ha come obiettivo la ricerca di attestazioni SOA all?i
 Dato un insieme di documenti in formato testuale appartenenti al dominio delle gare d'appalto, estrarre le attestazioni SOA ivi menzionate.
 }
 
-\subsection{Accesso ai documenti del dataset}
+\section{Accesso ai documenti del dataset}
 
 Il dataset dei documenti di gare d'appalto è implementato con un file csv. 
 Tale file dunque descrive ogni documento come campi comma-separated; alcuni di questi campi sono l'id del documento, il testo del documento, il cig del bando, lo score della classificazione.
@@ -39,7 +39,7 @@ print(dataframe['testo'][0])
 
 Una volta estratti gli elementi di testo del dataframe, posso applicare le espressioni regolari alla ricerca delle attestazioni SOA su ogni singolo testo.
 
-\subsection{Regex, raccolta e filtraggio di istanze}
+\section{Regex, raccolta e filtraggio di istanze}
 L'individuazione e la classificazione di attestazioni SOA da un testo richiedono due azioni: 
 \begin{enumerate}
 \item Raccolta delle istanze: trovare una porzione di testo che abbia la struttura di un valore SOA;
@@ -69,7 +69,7 @@ Infine la procedura svolta è descrivibile a grandi linee come segue:
 
 
 
-\subsection{Ricerca e classificazione delle attestazioni SOA}
+\section{Ricerca e classificazione delle attestazioni SOA}
 \begin{enumerate}
 \item identifico una finestra di testo di mio interesse; 
 \item all'interno della finestra ricerco istanze delle singole categorie e classifiche;
@@ -92,7 +92,7 @@ In definitiva, le regex hanno il vantaggio di produrre dei risultati immediati, 
 Di seguito do un po' di dettagli sulle regex usate relativamente alle categorie e alle classifiche economiche.
 
 
-\subsection{Finestre, espressioni regolari, filtering}
+\section{Finestre, espressioni regolari, filtering}
 
 La Finestra di caratteri è selezionata nel modo seguente:
 la presenza di una delle stringhe \{ \say{OS}, \say{Os}, \say{OG}, \say{Og} \} costituisce l'inizio della finestra;
@@ -139,7 +139,7 @@ class\_regex ='(IV bis|IV|III|II|IX|VIII|VII|VI|X|V|I)[^\w]'
 
 
 
-\subsection{Errori comuni riportati}
+\section{Errori comuni riportati}
 
 Dovendo valutare l'output del prototipo, raccolgo qui gli errori raggruppandoli in alcune categorie principali. 
 Dalla tabella contenuta nel  foglio di calcolo condiviso  si possono vedere le corrispondenze tra input e output, compresi i casi di errore.
@@ -224,7 +224,7 @@ Valori erronei di classifica economica
   riga 828, "OS24 II, OS261 E OS 33 Il) e Visura Camerale e certificazione ISO 9001:2008 ISO 18001:2007       \end{Verbatim}  
 
 
-\subsection{Considerazioni}
+\section{Considerazioni}
 
 Gli errori rilevati nell'output - come detto precedentemente - sorgono in diversi punti della logica utilizzata e hanno livelli di problematicità differenti:
 \begin{itemize}
@@ -247,7 +247,7 @@ nella stringa "OS14 per il lotto II"  la class\_regex troverà un numero romano (
 Risolvere questo singolo caso a livello regex -nello specifico, escludere i numeri romani dopo la parola  "lotto"- comporta espressioni regolari più complesse, ma non esclude ulteriori  casi di falso-positivo.
 
 
-\subsection{Superare l'approccio regex a priori}
+\section{Superare l'approccio regex a priori}
 In estrema sintesi, la criticità principale dell'approccio usato è 
 affidare il riconoscimento del valore-stringa ad un criterio fissato a priori.
 L'approccio ideale dovrebbe consentire all'operatore umano di aggiungere istanze alla casistica già presente, in modo da:
