@@ -8,14 +8,60 @@
 % 
 
 %\section{Tecniche di Machine Learning}
-Il prototipo in questione ha come obiettivo la ricerca di attestazioni SOA all?interno di un testo. Nello specifico, il prototipo adopera tecniche di programmazione tradizionale, usando degli script Python ed effettuando ricerche di stringhe con espressioni regolari
 
-\paragraph{Formulazione del problema:}
-\textit{
-Dato un insieme di documenti in formato testuale appartenenti al dominio delle gare d'appalto, estrarre le attestazioni SOA ivi menzionate.
-}
+\textit{Qui espongo brevemente perché il MachineLearning}
+
+\section{Training di un Modello}
+\textit{Qui dico come funziona il training}
+La creazione di un modello di Deep Learning richiede una fase di addestramento o \textbf{training}.
+\cite{machineLearningBook}
 
 \section{Valutazione e ground truth}
-\section{Annotazioni gold in doccano}
+\textit{Qui dico come deve essere fatta la ground truth}
 \section{Manuale di annotazione}
-\section{Uso della libreria SpaCy}
+\textit{Qui spiego come annotare + tabella esempi}
+
+\section{Annotazioni gold in Doccano}
+
+\textit{Qui dico come ho usato doccano per produrre la ground truth}
+
+\section{La libreria SpaCy}
+Per l'implementazione di una rete neurale abbiamo fatto uso della libreria \textbf{Spacy}, una libreria \text it{open-source} scritta in Python e Cython che implementa funzionalità di Natural Language Processing. Tra i progetti che appartengono al mondo SpaCy vi è la libreria Thinc, che permette di importare modelli statistici da PyTorch, TensorFlow e MXNet\cite{spacyThinc}. Spacy fornisce funzionalità di \textbf{tagger}, \textbf{parser}, \textbf{text categorizer}, \textbf{ner} e permette di articolarli in una pipeline; inoltre rende possibile la configurazione di nuovi componenti e la loro aggiunta alla pipeline. 
+
+\section{Uso di Spacy}
+
+\paragraph{Configurazione della pipeline:}
+Istruisco SpaCy su quali sono le funzionalità da inserire in pipeline. Nel caso in questione la pipeline deve effettuare la tokenizzazione di elementi testuali della lingua italiana e la loro classificazione come entità. A livello di configurazione questo si traduce in queste righe del file base\_config.cfg:
+\begin{Verbatim}
+[nlp]
+lang = "it"
+pipeline = ["tok2vec","ner"]
+\end{Verbatim}
+Basta poi il seguente comando per ottenere la configurazione completa della pipeline:
+\begin{Verbatim}
+spacy init fill-config base_config.cfg config.cfg
+\end{Verbatim}
+
+\paragraph{Fase di apprendimento:}
+La costruzione e la fase di istruzione del modello 
+\begin{Verbatim}
+spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
+  --output ./output
+\end{Verbatim}
+
+\paragraph{Fase di apprendimento:}
+SpaCy fornisce l'apposito comando:
+
+\begin{Verbatim}
+python3 -m spacy debug data config.cfg --paths.train ./train.spacy 
+  --paths.dev ./dev.spacy
+\end{Verbatim}
+
+\paragraph{Valutazione di precision e recall:}
+SpaCy fornisce l'apposito comando:
+\begin{Verbatim}
+spacy evaluate output/model-best/ test.spacy --displacy-path . --displacy-limit 100  
+  --output output.json 
+\end{Verbatim}
+
+
