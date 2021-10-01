@@ -7,28 +7,57 @@
 % ./makepdfplease
 % 
 
-%\section{Tecniche di Machine Learning}
 
-\textit{Qui espongo brevemente perché il MachineLearning}
+\section{Machine Learning}
+L'approccio del Machine Learning consiste nell'usare un algoritmo per produrre un modello che minimizzi 
+gli errori di classificazione rispetto a delle classificazioni vere per ipotesi.
+Questo ha una conseguenza importante: un classificatore, una volta istruito a riconoscere una classe
+partendo da una certa quantità di esempi giusti, potrà stimare la classe anche in presenza di dati 
+non uguali agli esempi di partenza.
+Ciò costituisce una grande differenza rispetto alla regex, che consente di rilevare un testo
+solo se esattamente conforme all'automa da essa descritto.
 
-\section{Training di un Modello}
-\textit{Qui dico come funziona il training}
-La creazione di un modello di Deep Learning richiede una fase di addestramento o \textbf{training}.
-\cite{machineLearningBook}
+\section{Annotazioni gold in Doccano: manuale dell'annotatore}
+Per chi si occuperà dell'annotazione è necessario sapere che i dati SOA non sono scritti in maniera uguale in tutti i documenti.
+Vogliamo dare un'idea di quanti modi diversi esistono per indicare una categoria: per esempio OG-12, \say{Opere ed impianti di bonifica e protezione ambientale}, può essere indicato in uno qualsiasi dei modi seguenti:
+\begin{itemize}
+\item Opere Generali 12;
+\item Opere Generali di tipo 12;
+\item Op.Gen. cat.12;
+\item og 12;
+\item og12;
+\item o.g. 12;
+\item og12;
+\item o.g.12;
+\item og.12;
+\item og. 12;
+\item og-12;
+\item o.g.-12;
+\item og.-12;
+\item OG 12, "Opere ed impianti di bonifica e protezione ambientale".
+\end{itemize}
+Se si aggiunge che alcuni dei documenti sono stati digitalizzati a partire da fogli stampati e acquisiti con OCR, ci potrebbero essere degli errori di interpretazione, con conseguenze del genere:
+0G12 (carattere di \say{zero} al posto della lettera \say{O});
+0Gl2 (\say{L}  minuscola al posto del carattere numerico \say{1}).
+Casi di errore così banali non lasciano dubbi sul significato (\say{OG-12}) per cui qualsiasi umano può correttamente annotarli.
 
-\section{Valutazione e ground truth}
-\textit{Qui dico come deve essere fatta la ground truth}
-\section{Manuale di annotazione}
-\textit{Qui spiego come annotare + tabella esempi}
+È altrettanto possibile che la categoria economica, normalmente espressa in numeri romani, si trovi scritta in modi differenti; vediamo il caso della III categoria, di seguito:\begin{itemize}
+\item categoria III, con importo xyz;
+\item cat.III;
+\item categoria terza; 
+\item cat.III°;
+\item cat. 3°.
+\end{itemize}
+Anche le categorie possono soffrire di errori OCR: è frequente ad esempio che la \say{l} prenda il posto della \say{I}, ma chi annota non avrà problemi a riconoscere il significato dell'informazione.
 
-\section{Annotazioni gold in Doccano}
-
-\textit{Qui dico come ho usato doccano per produrre la ground truth}
 
 \section{La libreria SpaCy}
 Per l'implementazione di una rete neurale abbiamo fatto uso della libreria \textbf{Spacy}, una libreria \text it{open-source} scritta in Python e Cython che implementa funzionalità di Natural Language Processing. Tra i progetti che appartengono al mondo SpaCy vi è la libreria Thinc, che permette di importare modelli statistici da PyTorch, TensorFlow e MXNet\cite{spacyThinc}. Spacy fornisce funzionalità di \textbf{tagger}, \textbf{parser}, \textbf{text categorizer}, \textbf{ner} e permette di articolarli in una pipeline; inoltre rende possibile la configurazione di nuovi componenti e la loro aggiunta alla pipeline. 
 
 \section{Uso di Spacy}
+Per l'uso di SpaCy abbiamo dovuto creare gli insiemi di Training, Development e Test.
+Le annotazioni gold della ground truth sono state dunque divise in questi tre insiemi, 
+rispettivamente aventi il 70\%, il 10 \% e il 20 \% delle annotazioni golden.
 
 \paragraph{Configurazione della pipeline:}
 Istruisco SpaCy su quali sono le funzionalità da inserire in pipeline. Nel caso in questione la pipeline deve effettuare la tokenizzazione di elementi testuali della lingua italiana e la loro classificazione come entità. A livello di configurazione questo si traduce in queste righe del file base\_config.cfg:
@@ -43,22 +72,24 @@ spacy init fill-config base_config.cfg config.cfg
 \end{Verbatim}
 
 \paragraph{Fase di apprendimento:}
-La costruzione e la fase di istruzione del modello 
+La costruzione del modello adopera il le golden labels di training e viene svolta col seguente comando:
 \begin{Verbatim}
 spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
   --output ./output
 \end{Verbatim}
 
-\paragraph{Fase di apprendimento:}
-SpaCy fornisce l'apposito comando:
-
+\paragraph{Debug:}
+Data un'entità \textit{E}, avere un numero di esempi di \textit{E} troppo limitato significherebbe dare poca esperienza di \textit{E} al modello.Per questo SpaCy fornisce un comando che controlla il numero di esempi per ogni entità, effettuando al contempo dei controlli ortografici su tutte le labels:
 \begin{Verbatim}
 python3 -m spacy debug data config.cfg --paths.train ./train.spacy 
   --paths.dev ./dev.spacy
 \end{Verbatim}
 
 \paragraph{Valutazione di precision e recall:}
-SpaCy fornisce l'apposito comando:
+Una volta istruito un modello ed esserci assicurati che le annotazioni che usa sono valide,
+possiamo mettere alla prova il modello: sottoponiamo al modello il docbin di test, le cui entità sono già annotate,
+e confrontiamo l'output del modello con le annotazioni gold.
+Tale confronto viene eseguito da Spacy con il seguente comando:
 \begin{Verbatim}
 spacy evaluate output/model-best/ test.spacy --displacy-path . --displacy-limit 100  
   --output output.json 

@@ -13,8 +13,8 @@ In questa sezione andremo a illustrare come sono stati realizzati i due approcci
 \item con tecniche di Machine Learning.
 \end{itemize}
 
-\section{Uso di regex}
-Il prototipo in questione ha come obiettivo la ricerca di attestazioni SOA all?interno di un testo. Nello specifico, il prototipo adopera tecniche di programmazione tradizionale, usando degli script Python ed effettuando ricerche di stringhe con espressioni regolari
+\section{Espressioni regolari}
+Il prototipo in questione ha come obiettivo la ricerca di attestazioni SOA all'interno di un testo. Nello specifico, il prototipo adopera tecniche di programmazione tradizionale, usando degli script Python ed effettuando ricerche di stringhe con espressioni regolari
 
 \paragraph{Formulazione del problema:}
 \textit{
@@ -120,7 +120,7 @@ Ad esempio: le istanze
 \begin{Verbatim}
 "OS 10" , "OS<tab>10" e "OS\n10"
 \end{Verbatim}
-con la normalizzazione assumono la stessa forma OS-10.
+con la normalizzazione assumono la stessa forma \say{OS-10}.
 
 
 \paragraph{Filtering:} seleziona le attestazioni \textit{sensate} in quanto contenute nel relativo dizionario. È infatti possibile che un'attestazione sia accettabile per la regex (ad es. OS-77) ma non abbia senso nel dominio delle categorie SOA.
@@ -165,7 +165,7 @@ Categoria non acquisita:
 \begin{enumerate}
 \item caratteri estranei a quelli previsti dalla regex;
 \item spaziature non previste nella  soa\_cat\_regex;
-\item nella  cat\_regex il match avviene correttamente solo con "OS-12A"; non è previsto il carattere "-" prima della lettera "A";
+\item nella  cat\_regex il match avviene correttamente solo con \say{OS-12A}; non è previsto il carattere \say{-} prima della lettera \say{A};
 \item nella  cat\_regex non è previsto il carattere di interpunzione \say{.}
 \end{enumerate}
 
@@ -184,7 +184,7 @@ Classifica non acquisita:
 \paragraph{Motivazioni:} 
 \begin{enumerate}
 \item errore lato script: lo script seleziona una sottostringa con il carattere finale mancante, causando il mancato match con la class\_regex;
-\item "OS3 VE" (dove VE indica "V classifica Economica") non è previsto dalla regex della classifica.
+\item \say{OS3 VE} (dove VE indica \say{V classifica Economica}) non è previsto dalla regex della classifica.
 \end{enumerate}
 
 Sottoclassifica non acquisita:
@@ -229,25 +229,25 @@ Valori erronei di classifica economica
 Gli errori rilevati nell'output - come detto precedentemente - sorgono in diversi punti della logica utilizzata e hanno livelli di problematicità differenti:
 \begin{itemize}
 \item un bug nello script: se sistematico, può essere corretto facilmente;
-\item un valore assente a livello di dizionario: questo comporta delle decisioni sui valori del dominio; se trovo la stringa "OS-18",  è sensato supporre che si stia parlando di OS-18A?  o forse è possibile che l'autore sottointendesse un valore "OS-18B" dopo averlo precedentemente menzionato?
+\item un valore assente a livello di dizionario: questo comporta delle decisioni sui valori del dominio; se trovo la stringa \say{OS-18},  è sensato supporre che si stia parlando di \say{OS-18A}?  o forse è possibile che l'autore sottointendesse un valore \say{OS-18B} dopo averlo precedentemente menzionato?
 \end{itemize}
 A livello di regex è possibile apportare modifiche per fare match dei casi più particolari, però si pongono due problemi:
 \begin{itemize}
 \item  dopo aver adattato la regex ad un nuovo caso particolare, questa potrebbe non accettare alcuni casi che facevano match in precedenza; dunque ad ogni modifica è necessario ricontrollare esaustivamente tutti gli output - compresi quelli che erano processati bene prima delle modifiche;
 \item  eccessiva complessità della regex: dopo pochi rimaneggiamenti, l'espressione regolare diventa
 tendenzialmente incomprensibile, per cui future correzioni e modifiche diventano più difficili ed error-prone.\end{itemize}
-In generale i documenti esaminati usano un linguaggio naturale; è quindi possibile -nonostante la natura tecnica dei discorsi-  che un documento da processare contenga attestazioni SOA trascritte in maniere differenti, non note a priori (Ad es. "OS11", "Opere specialistiche, categoria 11", "Op.Sp. 11"), dettate essenzialmente dallo stile dell'autore.
+In generale i documenti esaminati usano un linguaggio naturale; è quindi possibile -nonostante la natura tecnica dei discorsi-  che un documento da processare contenga attestazioni SOA trascritte in maniere differenti, non note a priori (Ad es. \say{OS11}, \say{Opere specialistiche, categoria 11}, \say{Op.Sp. 11}), dettate essenzialmente dallo stile dell'autore.
 
 
 Dunque, in un documento potrebbe esserci una trascrizione nuova da adottare; e l'ideale sarebbe aggiungerla in maniera incrementale alla casistica di trascrizioni già adottate in precedenza.
 A livello di regex l'approccio incrementale non è per nulla agevole: si deve scrivere una regex nuova, che aggiunga i nuovi casi rilevati senza compromettere quelli precedenti.
 La nuova regex deve essere dunque testata sia sulla casistica di valori nuovi  sia sulla casistica vecchia.
 Infine, rimane il problema che la regex non mi consente di delineare un contesto, ad es.:
-nella stringa "OS14 per il lotto II"  la class\_regex troverà un numero romano ("II", appunto) e lo assumerà erroneamente come valore di classifica.
-Risolvere questo singolo caso a livello regex -nello specifico, escludere i numeri romani dopo la parola  "lotto"- comporta espressioni regolari più complesse, ma non esclude ulteriori  casi di falso-positivo.
+nella stringa \say{OS14 per il lotto II}  la class\_regex troverà un numero romano (\say{II}, appunto) e lo assumerà erroneamente come valore di classifica.
+Risolvere questo singolo caso a livello regex -nello specifico, escludere i numeri romani dopo la parola  \say{lotto}- comporta espressioni regolari più complesse, ma non esclude ulteriori  casi di falso-positivo.
 
 
-\section{Superare l'approccio regex a priori}
+\section{Superare l'approccio a priori}
 In estrema sintesi, la criticità principale dell'approccio usato è 
 affidare il riconoscimento del valore-stringa ad un criterio fissato a priori.
 L'approccio ideale dovrebbe consentire all'operatore umano di aggiungere istanze alla casistica già presente, in modo da:
