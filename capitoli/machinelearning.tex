@@ -61,38 +61,38 @@ rispettivamente aventi il 70\%, il 10 \% e il 20 \% delle annotazioni golden.
 
 \paragraph{Configurazione della pipeline:}
 Istruisco SpaCy su quali sono le funzionalità da inserire in pipeline. Nel caso in questione la pipeline deve effettuare la tokenizzazione di elementi testuali della lingua italiana e la loro classificazione come entità. A livello di configurazione questo si traduce in queste righe del file base\_config.cfg:
-\begin{Verbatim}
+\begin{lstlisting}[language=Python]
 [nlp]
 lang = "it"
 pipeline = ["tok2vec","ner"]
-\end{Verbatim}
+\end{lstlisting}
 Basta poi il seguente comando per ottenere la configurazione completa della pipeline:
-\begin{Verbatim}
+\begin{lstlisting}[language=Python]
 spacy init fill-config base_config.cfg config.cfg
-\end{Verbatim}
+\end{lstlisting}
 
 \paragraph{Fase di apprendimento:}
 La costruzione del modello adopera il le golden labels di training e viene svolta col seguente comando:
-\begin{Verbatim}
+\begin{lstlisting}[language=Python]
 spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
   --output ./output
-\end{Verbatim}
+\end{lstlisting}
 
 \paragraph{Debug:}
 Data un'entità \textit{E}, avere un numero di esempi di \textit{E} troppo limitato significherebbe dare poca esperienza di \textit{E} al modello.Per questo SpaCy fornisce un comando che controlla il numero di esempi per ogni entità, effettuando al contempo dei controlli ortografici su tutte le labels:
-\begin{Verbatim}
+\begin{lstlisting}[language=Python]
 python3 -m spacy debug data config.cfg --paths.train ./train.spacy 
   --paths.dev ./dev.spacy
-\end{Verbatim}
+\end{lstlisting}
 
 \paragraph{Valutazione di precision e recall:}
 Una volta istruito un modello ed esserci assicurati che le annotazioni che usa sono valide,
 possiamo mettere alla prova il modello: sottoponiamo al modello il docbin di test, le cui entità sono già annotate,
 e confrontiamo l'output del modello con le annotazioni gold.
 Tale confronto viene eseguito da Spacy con il seguente comando:
-\begin{Verbatim}
+\begin{lstlisting}[language=Python]
 spacy evaluate output/model-best/ test.spacy --displacy-path . --displacy-limit 100  
   --output output.json 
-\end{Verbatim}
+\end{lstlisting}
 
 

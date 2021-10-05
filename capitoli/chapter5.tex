@@ -7,14 +7,52 @@
 % ./makepdfplease
 % 
 
-In questa sezione andremo a confrontare i due approcci di Named Entity Recognition.
-Infatti con la realizzazione di uno scorer possiamo valutare la bontà delle classificazioni 
-del prototipo regex e la bontà delle classificazioni del modello ML.
+Dopo l'implementazione dei due prototipi, possiamo introdurre la loro valutazione con l'uso della classe Scorer della libreria SpaCy.
+La terminologia Scorer proviene dal mondo del Machine Learning ed indica l'affidabilità della predizione di una data entità in termini di \textbf{precision}, \textbf{recall} e \textbf{accuracy}.
 
-\section{Scorer}
-\textit{in questa}
+\section{Scorer Class}
+Lo Scorer è la classe fornita da SpaCy per valutare le performance di un modello annotatore per ogni singola entità basandosi sulle 
+annotazioni prodotte da tale modello.
+Lo Scorer richiede all'utente della libreria di avere a disposizione l'output del modello annotatore e le gold annotations della Ground Truth.
+Per ogni annotazione si crea un oggetto spacy.Span e si crea una lista di Span, che chiameremo labelled\_entities\_span\_list; si potrà poi utilizzare la lista di gold annotations per creare il relativo \textbf{item} che descrive l'annotazione di un documento:
+
+\begin{lstlisting}[language=Python, caption=Esempio di item]
+item = Example.from_dict(labelled_entities_span_list, 
+                         {"entities": [[start_offset, end_offset, word]
+                                      for [start_offset, end_offset, word]
+                                      in gold_annots]})
+\end{lstlisting}
+
+Si crea un Example per ogni documento annotato e si pongono gli item in una \textbf{item\_list}.
+Tutti i dati annotati dal modello annotatore sono ora nella item list ed è dunque possibile invocare 
+il task di score vero e proprio:
+\begin{lstlisting}[language=Python]
+    scores = scorer.score(item_list)
+\end{lstlisting}
+
 \section{Confronto tra i due approcci}
-\textit{in questa}
+Nella tabella scores-comparisons.pdf riporta i valori di Precision, Recall e Accuracy ottenuti per ogni entità contemplata nel task di 
+classificazione.
 
+
+%allora\includegraphics[width=16cm, height=30cm,page=1]{scores-comparisons.pdf} %width=, height=, page=,
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio, page=1]{confronti.pdf} 
+Si può facilmente notare come molte entità di tipo \textbf{Categoria} vedono valori di precision recall e accuracy migliori nell'approccio
+Machine Learning; questo miglioramento si rivela significativo in circa il 60\% delle entità categoria.
+Nel restante 40\% delle categorie si registra un peggioramento delle performance del Machine Learning, che in pochi ma significativi casi abbatte a zero le score.
+Questo può essere dovuto alla mancanza di esempi numerosi per tutte le entità: 
+ciò porterebbe il modello a funzionare molto bene nel riconoscere le entità ben rappresentate dalla ground truth,
+ma anche a funzionare peggio per tutte le entità meno note.
+Le regex invece, fornendo a priori i pattern di ogni entità, non soffrono della mancanza di esempi. 
 \section{Conclusioni}
-\textit{in questa}
+Come sottolineato precedentemente, l'approccio NER con regex non ha grandi margini di miglioramento dell'accuratezza:
+in sintesi è un approccio rigido, che in caso di inclusione di nuovi pattern testuali 
+richiederebbe la continua modifica di una regex in forme sempre più complesse, risolvendosi in
+problemi di manutenzione, di testing, di leggibilità e talvolta di sicurezza.
+Nel caso del Machine Learning un task di NER può avere risultati migliori delle regex, 
+ma può soffrire di carenza di esempi per alcune entità.
+Su questa base si potrebbe proporre l'uso combinato degli output di entrambi i modelli: in particolare,
+si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello ML, preferendo invece quest'ultimo
+per le entità su cui gli score descrivono prestazioni migliori.
+
+
