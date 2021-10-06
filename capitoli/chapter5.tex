@@ -49,10 +49,11 @@ Come sottolineato precedentemente, l'approccio NER con regex non ha grandi margi
 in sintesi è un approccio rigido, che in caso di inclusione di nuovi pattern testuali 
 richiederebbe la continua modifica di una regex in forme sempre più complesse, risolvendosi in
 problemi di manutenzione, di testing, di leggibilità e talvolta di sicurezza.
-Nel caso del Machine Learning un task di NER può avere risultati migliori delle regex, 
+Nel caso del Machine Learning un task di \acrfull{NER} può avere risultati migliori delle regex, 
 ma può soffrire di carenza di esempi per alcune entità.
 Su questa base si potrebbe proporre l'uso combinato degli output di entrambi i modelli: in particolare,
-si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello ML, preferendo invece quest'ultimo
+si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello \acrfull{ml}
+, preferendo invece quest'ultimo
 per le entità su cui gli score descrivono prestazioni migliori.
 
 

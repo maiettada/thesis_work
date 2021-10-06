@@ -88,8 +88,10 @@
   tabsize=2
 }
 \lstset{style=mystyle}
-
-
+\usepackage[acronym]{glossaries}
+\makeglossaries
+\newacronym{ml}{ML}{Machine Learning}
+\newacronym{NER}{NER}{Named Entity Recognition}
 
 
 \begin{document}
@@ -233,6 +235,9 @@ Opzionali, solo nel caso si sia ricevuto un aiuto speciale e particolarmente ril
 %\input{biblio.tex}
 
 % se la bibliografia è stata scritta (usando Bibtex) nel file biblio.bib allora commentare la riga precedente e scommentare le due righe seguenti
+\backmatter
+\printglossary[type=\acronymtype]
+
 \bibliographystyle{plain} 
 \bibliography{biblio.bib}
 

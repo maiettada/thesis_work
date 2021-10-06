@@ -1,6 +1,7 @@
 #!/bin/sh
 pdflatex maietta.tex
 bibtex maietta.aux
+makeglossaries maietta
 pdflatex maietta.tex
 pdflatex maietta.tex && xdg-open maietta.pdf
 rm *.toc *.aux *.log *.out
