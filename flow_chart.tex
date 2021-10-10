@@ -16,11 +16,83 @@
             citecolor={black}]{hyperref}
 \usepackage{lipsum} % added for generating a dummy text, 
                     % not needed in real document
+\usepackage{fancyvrb}
 
 \begin{document}
 \lipsum[1]  % dummy text
 %\begin{tcolorbox}[colback=white]
+\begin{Verbatim}
+# Extraction of public administration data from official document
 
+The following modules were used to perform a Named Entity Recognition of data from Public Administration documents(mostly tenders).
+Those data describe the certifications that a company is required to have to apply for a tender; such certification in Italy are called SOA-certifications(S.O.A.: in Italian "Società degli Organismi di Attestazione", in English "Certification Organizations' Society ").
+The modules of this repository were built and used to extract  certifications data from documents.
+
+**Modules**: 
+1. NER regex: python script that extracts SOA data with the usage of regular expressions;
+2. dataset splitter: takes a gold.json1 file describing the ground truth; divides it into many labelled sentences, distributing them to the train/dev/test bins;
+It's a necessary step for the setup of a NER task in spacy;
+3. NER SpaCy: bash scripts to initialize, train, debug and evaluate the neural network with the usage of the Spacy library;
+4. scorer for regex-extracted data: takes in input some regex-extracted soa data (v1, v2 or v3, retrieved by using different regex) and scores them by comparing them to the ground truth;
+
+
+5. json to csv: helper script to convert Spacy-scores from json format to csv format;
+
+documented_outputs: results of the modules with the real data.
+
+# 1.NER regex:
+### what's inside:
+it contains the main script *ner_regex.py* and the *Dataset* folder.
+The Dataset folder is provided with an example *"soa.csv" input file*.
+### usage:
+The user can just execute the script ner_regex.py.
+This module is meant to find text-instances of SOA data and to label them.
+### output:
+a .json1 file containing annotations that describe the retrieved entities.
+
+
+
+# 2.Dataset splitter:
+### example input:
+The gold.json1 file is an example of **Ground Truth**. This module takes the gold.json1 and
+divides creates the docbins that will be used later on for building a NN
+#### usage:
+Execute the dataset_splitter.py script
+### output:
+Train.spacy, Dev.spacy, Test.spacy.
+
+
+# 3.NER spaCy
+### input:
+the module needs the docbins **train.spacy**,**dev.spacy**,**test.spacy** produced by the Dataset Splitter Module.
+### usage:
+1. execute script 3.0-retrieve-inputs.sh, it will copy the spacy file from the previous module 
+2. 3.1-train.sh: trains a neural network
+3. 3.2-debug.sh: retrieves info on how experienced the NN is.
+4. 3.3-evaluate.sh: tests the NN with the test data of the test.spacy file
+### output:
+NN model with debug information and testing results.
+
+### wip model usage
+
+
+# Scorer:
+### inputs
+gold.json, describes the Ground Truth
+### usage
+1. 4.0-retrieve-inputs.sh: retrieves the ner.json1 produced by the  NER
+2. scorer_for_regex_extracted_data***: scores the  ner.json1 by comparing it to the gold.json
+### output
+output-cat-class.json: scores for every category item and classification item
+
+
+# Json to csv
+### usage
+5.0 retrieve inputs(DEPRECATED): PUT THE TWO SCORE FILE (EITHER FOR REGEX OR SPACY) IN THIS FOLDER
+json_to_csv.py 
+### output:
+csv_tables/ner_results.csv, describes the scores in a tabular form
+\end{Verbatim}
 
 %REGEX NER
 	\begin{figure}[ht] % placed here or on the top of page
