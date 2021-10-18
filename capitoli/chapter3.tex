@@ -8,45 +8,40 @@
 % 
 
 
+\chapter{Estrazione di entità da testi}
+%\chapter[Impiego delle regular expression][]{3. Impiego delle regular expression} %evita la dicitura "capitolo"
+In questo capitolo vogliamo focalizzarci sulla \acrfull{named-entity-recognition} e sulle varie possibilità di estrarre 
+e classificare informazioni contenute in documenti di testo. L'estrazione di pattern testuali è una pratica consolidata 
+nella programmazione tradizionale che fa abbondante uso delle \textbf{regular expression}; tuttavia, le regex soffrono di una
+serie di problematiche che le rendono uno strumento poco affidabile se usato da solo. Tali problematiche possono essere arginate e 
+risolte se alle regex si affiancano altre tecnologie.
+Un altro strumento usato in NER sono le reti neurali o \acrfull{neural-network}, che a differenza delle regex non \say{apprendono}
+un pattern testuale con una grammatica regolare, ma con l'uso di un quantitativo massiccio di esempi di dati \textbf{di training} opportunamente classificati, con un approccio che in \acrlong{machine-learning} viene definito \textbf{supervisionato}.
+Vedremo che la \acrlong{named-entity-recognition} può avvalersi anche di una tecnologia ibrida che sfrutti in contemporanea strumenti
+diversi, tra cui regular expressions, ontologie e reti neurali.
+Infine un pattern degno di nota è lo \acrfull{human-in-the-loop}, che permette l'intervento di un revisore umano per apportare correzioni
+alle entità estratte dal sistema NER; tale pattern si rivela particolarmente vantaggioso perché abilita il sistema NER ad \textbf{apprendere} le correzioni apportate per migliorare le prestazioni successive.
 
 
-%\section{Impiego delle regular expression}
-%\section{Difficoltà insite nelle regex}
-Le espressioni regolari sono usatissime nel mondo della programmazione: 
-si stima che siano utilizzate in \say{più di un terzo dei progetti Python e Javascript} \cite{RegexesAreHard}.
-La loro grande diffusione non vuol dire però che costituiscano una tecnologia sicura da utilizzare, poiché presentano
-problematiche di leggibilità, scarsità di documentazione, difficile manutenibilità e problemi di sicurezza non da poco conto.
-\paragraph{Leggibilità: } un grave problema delle regex è che, rappresentando dei pattern alfanumerici sintetizzati all'estremo, risultino incomprensibili alla lettura; gli sviluppatori non sono immuni a questo problema ed anche per 
-loro risalire al pattern alfanumerico partendo da una regex può essere un compito scomodo.
-\paragraph{Documentazione: } nel mondo della programmazione è consolidata la pratica di documentare i passaggi meno 
-leggibili di un algoritmo; nel caso delle regular expression, queste sono inserite negli algoritmi sotto forma di stringhe e ciò può influenzare il modo in cui gli sviluppatori le documentano:
-\begin{itemize}
-\item in alcuni IDE è disponibile la syntax highlighting per evidenziare i diversi "componenti" della regex;
-\item alcuni sviluppatori trovano comodo "spezzare" la regex su più linee di codice;
-questo consentirebbe di documentare linea per linea ogni "componente" della regex, ma non tutti i linguaggi lo permettono.
-\end{itemize}
-Infine molti sviluppatori esperti considerano le regex come "self-documenting" \cite{RegexesAreHard} e si rifiutano dunque di documentarle, contribuendo a renderle problematiche dal punto di vista della documentazione.
-\paragraph{Manutenibilità: } quando la leggibilità è scarsa e la documentazione è insufficiente, è giocofòrza che 
-qualsiasi modifica apportata a una regex possa, oltre ad includere nuovi pattern desiderati, escludere erroneamente
-e involontariamente tutta una serie di pattern che prima erano correttamente rilevati.
-\paragraph{Denial Of Service: } l'algoritmo di Spencer con cui sono implementate molte \textbf{regex engine}, soffre di una
-worst-case time complexity che può diventare esponenziale in alcuni casi di NFA non deterministici \cite{regexEngines}. Sebbene tale vulnerabilità esponga i server ad attacchi di \textbf{ReDoS}, gli sviluppatori software spesso non hanno la minima formazione su tale problema.
 
-
-\section{Regex: quando conviene usarle}
-Abbiamo visto finora quanto le regex possano essere un buono strumento software, ma anche presentare problematiche molto
-critiche; la comunità dei programmatori ha persino coniato il detto \textit{"Now you have two problems"}\cite{nowTwoProblems}, che esprime come le soluzioni software basate su regex, lungi dall'essere considerate affidabili, creino ulteriori problemi 
+\section{NER con Regex}
+Le regex sono notoriamente un potente strumento software, ma risultano difficilmente leggibili, i loro usi pratici sono documentati poco  e si rivelano poco manutenibili; la comunità dei programmatori ha persino coniato il detto \textit{"Now you have two problems"}\cite{nowTwoProblems}, che esprime come le soluzioni software basate su regex, lungi dall'essere considerate affidabili, creino ulteriori problemi 
 a causa della gestione delle regex stesse.
 Nello studio \textit{"How to invest my time"} \cite{HowToInvestMyTime} gli autori, ben consapevoli di quanto le regex siano complesse 
 ed error-prone, si domandano \textit{fino a che punto} possano essere usate vantaggiosamente;
-più in particolare il loro studio si cala nel contesto della Entity Extraction e si pone l'obiettivo di usare al m
+più in particolare il loro studio si cala nel contesto della Entity Extraction e si pone l'obiettivo di usare al 
 meglio le risorse umane, studiando due attività diverse e complementari:
-\begin{itemize}
-\item lo sviluppo di regex;
-\item l'annotazione manuale di dati.
-\end{itemize}
-Entrambe le attività umane sono volte all'addestramento di una rete neurale: la prima, producendo annotazioni con l'uso 
-della regex; la seconda, lasciando all'operatore umano la creazione di annotazioni, che possono essere usate sia per l'addestramento della rete neurale, sia per un successivo fine-tuning della rete neurale.
+\begin{enumerate}
+\item \label{here:att1}lo sviluppo di regex per produrre automaticamente annotazioni dati testuali;
+\item \label{here:att2}l'annotazione manuale delle entità contenute nei dati stessi.
+\end{enumerate}
+Le due attività sono compiute da operatori \textbf{umani}, per cui gli autori con questo studio hanno voluto indagare come
+utilizzare al meglio il tempo di un dipendente annotatore e programmatore, provando varie combinazioni delle due attività menzionate.
+La regex prodotta al punto ~\ref{here:att1} genera annotazioni dette \textbf{weak labels}, che vanno a costituire il \textbf{training set} della
+\acrlong{neural-network}. Al punto  ~\ref{here:att2} l'annotatore può creare annotazioni \textit{ex novo} per ampliare il dataset di training, ma può
+anche effettuare attività di \textbf{fine tuning}, correggendo le weak labels che la regex ha generato.
+Le due azioni concorrono a formare, addestrare e infine perfezionare una \acrlong{neural-network} e sono state sperimentate con differenti modalità temporali,
+creando scenari in cui il tempo è stato speso in diverse proporzioni sulla prima o sulla seconda attività.
 I risultati sperimentali di questo studio mostrano che:
 \begin{itemize}
 \item se il tempo da investire nella EE è poco (inferiore ai 40 minuti), conviene che l'operatore si limiti a produrre una regex;
@@ -58,20 +53,19 @@ Questo approccio che contempla le azioni umane in un sistema automatico da addes
 \section{Deep Learning con Human-In-The-Loop}
 Nel campo della Named Entity Recognition(NER) i metodi di Deep Learning hanno un discreto successo,
 perché richiedono un'ingegnerizzazione limitata \cite{ImprovingNE}; allo stesso tempo 
-però hanno bisogno di grandi quantità di dati, quindi richiedono la produzione di dati di training.
-Lo studio  Improving Named Entity Recognition propone quindi un uso iterativo degli annotatori umani all'interno del sistema Human NERD (dove NERD sta per Named Entity Recognition with Deep Learning).
+però hanno bisogno di grandi quantità di dati per effettuare il training dei modelli.
+Lo studio Improving Named Entity Recognition propone quindi un uso iterativo degli annotatori umani all'interno del sistema Human NERD (dove NERD sta per Named Entity Recognition with Deep Learning).
 Questo sistema di \textbf{Human In The Loop} si articola così:
-\begin{itemize}
-\item Primo Passo. Viene raccolto un dataset T di documenti non annotati;
-\item Secondo Passo. Al sistema Human NERD vengono forniti modelli NER esterni da acquisire; importando tali modelli, Human NERD effettua una prima annotazione dei documenti del dataset T; 
-\item Terzo Passo. Human NERD invia ciascun documento preannotato ad un annotatore umano; poiché si prevede che gli annotatori possano essere in numero maggiore di uno, ogni documento apparterrà esclusivamente ad un annotatore;
+\begin{enumerate}
+\item Viene raccolto un dataset T di documenti non annotati;
+\item Al sistema Human NERD vengono forniti modelli NER esterni da acquisire; importando tali modelli, Human NERD effettua una prima annotazione dei documenti del dataset T; 
+\item Human NERD invia ciascun documento preannotato ad un annotatore umano; poiché si prevede che gli annotatori possano essere in numero maggiore di uno, ogni documento apparterrà esclusivamente ad un annotatore;
 l'annotatore prescelto effettua la review delle annotazioni, aggiungendo, rimuovendo o correggendo etichette.
 Il risultato della revisione viene inviato al framework;
-\item Quarto Passo. Basandosi sulle correzioni ricevute, Human NERD può aggiornare il modello in maniera incrementale; in alternativa può fare training da zero, istruendo così un modello nuovo.
-\item Quinto Passo. Basandosi sui cambiamenti effettuati, Human NERD calcola il nuovo livello di Accuracy, computa il numero di occorrenze per classe d'entità, calcola il loss basato sulle attività di training e labelling; infine calcola una stima del gain dovuta al miglioramento dell'accuracy.
-\end{itemize}
-In definitiva l'approccio \textbf{Human In The Loop} è senz'altro promettente per la costruzione di dataset e per il training di modelli NER sempre più accurati. 
-
+\item Basandosi sulle correzioni ricevute, Human NERD può aggiornare il modello in maniera incrementale; in alternativa può fare training da zero, istruendo così un modello nuovo.
+\item Basandosi sui cambiamenti effettuati, Human NERD calcola il nuovo livello di Accuracy, computa il numero di occorrenze per classe d'entità, calcola il loss basato sulle attività di training e labelling; infine calcola una stima del gain dovuta al miglioramento dell'accuracy.
+\end{enumerate}
+In definitiva l'approccio \textbf{\acrlong{human-in-the-loop}} è senz'altro promettente per la costruzione di dataset e per il training di modelli \acrshort{named-entity-recognition} sempre più accurati.
 
 \section{Liste di dati da documenti sottoposti a OCR}
 Altro interessante contributo al Natural Language Processing è lo studio di Packer et al.\cite{costeffective},
@@ -79,12 +73,12 @@ in cui si propone il funzionamento del software ListReader per l'acquisizione di
 Più nello specifico ListReader acquisisce \textbf{liste} di dati; spetta ad un utente utilizzare l'interfaccia grafica 
 di ListReader per compilare un generico form che descriva la struttura dei dati: ad esempio, si pensi ad una lista di persone; ogni elemento della lista dovrà fornire il Nome e il Cognome della persona ed eventualmente altre informazioni anagrafiche; l'utente che osserverà tali dati li userà per creare un form contenente i textbox "Nome", "Cognome", "Data di nascita", "Data di Decesso", etc.
 Da questa parziale annotazione ListReader potrà:
-\begin{itemize}
+\begin{enumerate}
 \item popolare un'ontologia con entità e attributi derivanti dal form;
 \item indurre una regex per ogni dato identificato, costruendo un wrapper di regex iniziali;
 \item generalizzare le regex iniziali con un algoritmo A*, per renderle adeguate a catturare anche dati più complessi;
-\item step di active learning: consentire all'utente di modificare il form iniziale quando si presentino dati non aderenti alla struttura descritta dal form.
-\end{itemize}
+\item fare \textbf{active learning}: consentire all'utente di modificare il form iniziale quando si presentino dati non aderenti alla struttura descritta dal form.
+\end{enumerate}
 Infine ListReader risulta più performante degli algoritmi CRF per l'acquisizione di elementi da liste.
 
 

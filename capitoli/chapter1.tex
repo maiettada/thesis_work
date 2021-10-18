@@ -26,15 +26,15 @@
 
 
 
-
-
+\chapter{Estrazione di dati da testi della pubblica amministrazione}
+%\chapter[Estrazione di dati da testi della pubblica amministrazione][]{1. Estrazione di dati da testi della pubblica amministrazione}
 %IoT \cite{friis} basically refers to ....\\
 %\ac{IoT} basically refers to ....\\
 
 %\section{Introduzione}
 L'avanzamento tecnologico delle telecomunicazioni negli ultimi decenni ha permesso alle persone di recuperare dati e informazioni provenienti dai luoghi più disparati e ad una velocità di approvvigionamento praticamente nulla: se prima di Internet l'unico modo di ricevere un documento ufficiale era farne richiesta all'ufficio competente, ora le documentazioni possono essere normalmente a disposizione in rete. Gli utenti della rete hanno a disposizione una mole così grande di documenti e informazioni che gli è praticamente impossibile visionare la totalità di questi dati.
 In questo contesto l'esigenza di estrarre dati da documenti è sempre più sentita, soprattutto quando si voglia fare una cernita dei documenti contenenti specifiche informazioni di proprio interesse.
-Questa tesi ha come scopo effettuare un'estrazione di dati da un insieme di documenti della pubblica amministrazione; più precisamente i documenti appartengono al contesto dei bandi pubblici e i dati da cercare sono tutte quelle informazioni che impongono dei requisiti ai possibili partecipanti di gara. 
+Questa tesi ha come scopo effettuare un'estrazione di dati da un insieme di documenti della \acrfull{Pubblica Amministrazione}; più precisamente i documenti appartengono al contesto dei bandi pubblici e i dati da cercare sono tutte quelle informazioni che impongono dei requisiti ai possibili partecipanti di gara. 
 In questo contesto si provano approcci tecnologici diversi, nella fattispecie l'uso delle regular expressions e delle reti neurali; di entrambe le tecnologie si delineano punti di forza e svantaggi.
 
 
@@ -42,9 +42,9 @@ In questo contesto si provano approcci tecnologici diversi, nella fattispecie l'
 
 \section{Gare d'appalto}
 Tra le funzioni di uno Stato vi sono la costruzione, la manutenzione e la messa in sicurezza delle infrastrutture di pubblica utilità, quali ad esempio gli edifici pubblici, le reti di telecomunicazione, le strade e gli ospedali di cui beneficiano i cittadini.
-La Pubblica Amministrazione, dovendo garantire una quantità così grande di infrastrutture, non esegue i lavori direttamente, ma ne delega l'attuazione pratica a delle imprese private con un appalto pubblico.
+La \acrlong{Pubblica Amministrazione}, dovendo garantire una quantità così grande di infrastrutture, non esegue i lavori direttamente, ma ne delega l'attuazione pratica a delle imprese private con un appalto pubblico.
 L'appalto è un contratto con il quale una parte, detta parte appaltatrice, assume, \say{con organizzazione dei mezzi necessari e con gestione a proprio rischio, l'obbligazione di compiere in favore di un'altra (committente o appaltante) un'opera o un servizio}\cite{basacchi2013codice}.
-Gli appalti pubblici sono dunque un modo per eseguire delle opere pubbliche pagando delle imprese private per la realizzazione vera e propria; la Pubblica Amministrazione deve però assicurarsi che:
+Gli appalti pubblici sono dunque un modo per eseguire delle opere pubbliche pagando delle imprese private per la realizzazione vera e propria; la\acrshort{Pubblica Amministrazione} deve però assicurarsi che:
 l'impresa abbia le conoscenze per portare a termine l'opera rispettando degli standard tecnici, ossia seguendo la \textbf{regola d'arte};
 l'impresa gestisca i lavori in maniera competitiva, senza comportare sprechi ingiustificati di soldi pubblici;
 l'impresa riesca a reggere lo sforzo finanziario che l'opera comporta, sia per quanto riguarda l'approvvigionamento dei materiali, sia per quanto riguarda il costo del lavoro.
@@ -54,8 +54,8 @@ L'assegnazione di un progetto si avvale di apposita gara d'appalto, che ha come 
 Nell'ambito di una gara d'appalto, il progetto può essere composto da più parti singole chiamate lotti; l'assegnazione di un lotto è indipendente dagli altri, per cui diversi lotti di un progetto possono essere assegnati ad aziende differenti nell'ambito della stessa gara d'appalto.
 I documenti che andiamo ad analizzare riportano una serie di informazioni di nostro interesse, quali:
 \begin{itemize}
-\item il \textbf{Codice Unico di Progetto} (\textbf{CUP}), che descrive univocamente il progetto d'investimento pubblico;  è un identificativo alfanumerico di quindici caratteri;
-\item il \textbf{Codice Identificativo di Gara} (\textbf{CIG}), che indica in maniera univoca il lotto;
+\item il \textbf{\acrfull{Codice Unico di Progetto}}, che descrive univocamente il progetto d'investimento pubblico;  è un identificativo alfanumerico di quindici caratteri;
+\item il \textbf{\acrfull{Codice Identificativo di Gara}}, che indica in maniera univoca il lotto;
  è un identificativo alfanumerico di dieci caratteri;
 \end{itemize}
 

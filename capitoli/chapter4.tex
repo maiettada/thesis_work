@@ -7,11 +7,11 @@
 % ./makepdfplease
 % 
 
-In questa sezione andremo a illustrare come sono stati realizzati i due approcci di Named Entity Recognition:
-\begin{itemize}
-\item con le tradizionali tecniche di programmazione e con l'uso di espressioni regolari;
-\item con tecniche di Machine Learning.
-\end{itemize}
+\chapter[Realizzazione dei prototipi][]{4. Realizzazione dei prototipi}
+
+In questa sezione andremo a illustrare come sono stati realizzati i due approcci di Named Entity Recognition.
+Un primo prototipo è stato realizzato infatti con le tradizionali tecniche di programmazione e con l'uso di espressioni regolari.
+Il secondo prototipo invece è stato realizzato con tecniche di Machine Learning.
 
 \section{Espressioni regolari}
 Il prototipo in questione ha come obiettivo la ricerca di attestazioni SOA all'interno di un testo. Nello specifico, il prototipo adopera tecniche di programmazione tradizionale, usando degli script Python ed effettuando ricerche di stringhe con espressioni regolari
@@ -39,7 +39,7 @@ print(dataframe['testo'][0])
 
 Una volta estratti gli elementi di testo del dataframe, posso applicare le espressioni regolari alla ricerca delle attestazioni SOA su ogni singolo testo.
 
-\section{Regex, raccolta e filtraggio di istanze}
+\section{Raccolta e filtraggio di istanze}
 L'individuazione e la classificazione di attestazioni SOA da un testo richiedono due azioni: 
 \begin{enumerate}
 \item Raccolta delle istanze: trovare una porzione di testo che abbia la struttura di un valore SOA;
@@ -151,7 +151,7 @@ Gli errori riportati sorgono in maniere diverse: alcuni nascono a livello di reg
 Categoria non acquisita:
 \begin{Verbatim}
 1. riga   657,  OS "I                
-   riga 1181, OGI I si ? 105.541,05 | 62,901%| prevalente | Subappaltabile;
+   riga 1181, OGI I si ? 105.541,05 | 62,901
    riga 790, OG1IV bis e categoria scorporabile a;
    riga 792, OG1III e categoria scorporabile a;
 
@@ -247,7 +247,7 @@ nella stringa \say{OS14 per il lotto II}  la class\_regex troverà un numero roma
 Risolvere questo singolo caso a livello regex -nello specifico, escludere i numeri romani dopo la parola  \say{lotto}- comporta espressioni regolari più complesse, ma non esclude ulteriori  casi di falso-positivo.
 
 
-\section{Superare l'approccio a priori}
+\section{Superare le limitazioni delle regex col machine learning}
 In estrema sintesi, la criticità principale dell'approccio usato è 
 affidare il riconoscimento del valore-stringa ad un criterio fissato a priori.
 L'approccio ideale dovrebbe consentire all'operatore umano di aggiungere istanze alla casistica già presente, in modo da:
@@ -258,4 +258,91 @@ L'approccio ideale dovrebbe consentire all'operatore umano di aggiungere istanze
 
 L'esperienza acquisita fondamentalmente permetterebbe di confrontare l'input non con un singolo pattern a priori -che nell'esempio specifico è una regex, ma potrebbe anche essere definito in maniera procedurale- ma con un insieme di più pattern, incrementabili a discrezione dell'operatore umano per catturare anche le istanze meno standardizzabili del linguaggio.
 
+L'approccio del Machine Learning supervisionato consiste nell'usare un algoritmo per produrre un modello che minimizzi 
+gli errori di classificazione rispetto a delle classificazioni vere per ipotesi.
+Questo ha una conseguenza importante: un classificatore, una volta istruito a riconoscere una classe
+partendo da una certa quantità di esempi giusti, potrà stimare la classe anche in presenza di dati 
+non uguali agli esempi di partenza.
+Ciò costituisce una grande differenza rispetto alla regex, che consente di rilevare un testo
+solo se esattamente conforme all'automa da essa descritto.
 
+\section{Annotazioni gold in Doccano}
+Per poter applicare l'approccio ML alla ricerca di attestazioni SOA è necessario raccogliere le cosiddette
+\say{annotazioni gold} per costruire la \textbf{Ground Truth}  sulla quale basare l'apprendimento della rete neurale.
+I dati SOA, provenendo da un linguaggio formale e burocratico, non sono scritti in maniera uguale in tutti i documenti ma soffrono
+di una forte variabilità.
+Vogliamo dare un'idea di quanti modi diversi esistono per indicare una categoria: per esempio OG-12, \say{Opere ed impianti di bonifica e protezione ambientale}, può essere indicato in uno qualsiasi dei modi seguenti:
+\begin{itemize}
+\item Opere Generali 12;
+\item Opere Generali di tipo 12;
+\item Op.Gen. cat.12;
+\item og 12;
+\item og12;
+\item o.g. 12;
+\item og12;
+\item o.g.12;
+\item og.12;
+\item og. 12;
+\item og-12;
+\item o.g.-12;
+\item og.-12;
+\item OG 12, "Opere ed impianti di bonifica e protezione ambientale".
+\end{itemize}
+
+È altrettanto possibile che la categoria economica, normalmente espressa in numeri romani, si trovi scritta in modi differenti; vediamo il caso della III categoria, di seguito:\begin{itemize}
+\item categoria III, con importo xyz;
+\item cat.III;
+\item categoria terza; 
+\item cat.III°;
+\item cat. 3°.
+\end{itemize}
+Se si aggiunge che alcuni dei documenti sono stati digitalizzati a partire da fogli stampati e acquisiti con OCR, ci potrebbero essere degli errori di interpretazione; noi di seguito assumeremo di avere a disposizione un documento privo di errori di OCR.
+
+
+\section{La libreria SpaCy}
+Per l'implementazione di una rete neurale abbiamo fatto uso della libreria \textbf{Spacy}, una libreria \text it{open-source} scritta in Python e Cython che implementa funzionalità di Natural Language Processing. Tra i progetti che appartengono al mondo SpaCy vi è la libreria Thinc, che permette di importare modelli statistici da PyTorch, TensorFlow e MXNet\cite{spacyThinc}. Spacy fornisce funzionalità di \textbf{tagger}, \textbf{parser}, \textbf{text categorizer}, \textbf{ner} e permette di articolarli in una pipeline; inoltre rende possibile la configurazione di nuovi componenti e la loro aggiunta alla pipeline. 
+
+\section{Uso di Spacy}
+Per l'uso di SpaCy abbiamo dovuto creare gli insiemi di Training, Development e Test.
+Le annotazioni gold della ground truth sono state dunque divise in questi tre insiemi, 
+rispettivamente aventi il 70\%, il 10 \% e il 20 \% delle annotazioni golden.
+
+\paragraph{Configurazione della pipeline:}
+Istruisco SpaCy su quali sono le funzionalità da inserire in pipeline. Nel caso in questione la pipeline deve effettuare la tokenizzazione di elementi testuali della lingua italiana e la loro classificazione come entità. A livello di configurazione questo si traduce in queste righe del file base\_config.cfg:
+\begin{lstlisting}[language=Python]
+[nlp]
+lang = "it"
+pipeline = ["tok2vec","ner"]
+\end{lstlisting}
+Basta poi il seguente comando per ottenere la configurazione completa della pipeline:
+\begin{lstlisting}[language=Python]
+spacy init fill-config base_config.cfg config.cfg
+\end{lstlisting}
+
+\paragraph{Fase di apprendimento:}
+La costruzione del modello adopera il le golden labels di training e viene svolta col seguente comando:
+\begin{lstlisting}[language=Python]
+spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
+  --output ./output
+\end{lstlisting}
+
+\paragraph{Debug:}
+Data un'entità \textit{E}, avere un numero di esempi di \textit{E} troppo limitato significherebbe dare poca esperienza di \textit{E} al modello.Per questo SpaCy fornisce un comando che controlla il numero di esempi per ogni entità, effettuando al contempo dei controlli ortografici su tutte le labels:
+\begin{lstlisting}[language=Python]
+python3 -m spacy debug data config.cfg --paths.train ./train.spacy 
+  --paths.dev ./dev.spacy
+\end{lstlisting}
+
+\paragraph{Valutazione di precision e recall:}
+Una volta istruito un modello ed esserci assicurati che le annotazioni che usa sono valide,
+possiamo mettere alla prova il modello: sottoponiamo al modello il docbin di test, le cui entità sono già annotate,
+e confrontiamo l'output del modello con le annotazioni gold.
+Tale confronto viene eseguito da Spacy con il seguente comando:
+\begin{lstlisting}[language=Python]
+spacy evaluate output/model-best/ test.spacy --displacy-path . --displacy-limit 100  
+  --output output.json 
+\end{lstlisting}
+
+\paragraph{Uso della rete neurale}
+Dopo avere eseguito i passaggi precedenti che hanno permesso la configurazione e l'addestramento della \acrshort{neural-network}
+il modello può essere adoperato per estrarre entità da documenti di testo.

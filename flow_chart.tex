@@ -17,10 +17,10 @@
 \usepackage{lipsum} % added for generating a dummy text, 
                     % not needed in real document
 \usepackage{fancyvrb}
-
 \begin{document}
 %\lipsum[1]  % dummy text
 %\begin{tcolorbox}[colback=white]
+\begin{comment}
 \section{\textbf{Extraction of public administration data from official document}}
 The following modules were used to perform a Named Entity Recognition of data from Public Administration documents(mostly tenders).
 Those data describe the certifications that a company is required to have to apply for a tender; such certification in Italy are called SOA-certifications(S.O.A.: in Italian "Società degli Organismi di Attestazione", in English "Certification Organizations' Society ").
@@ -37,18 +37,17 @@ It's a necessary step for the setup of a NER task in spacy;
 \item{\textbf{json to csv:}} helper script to convert Spacy-scores from json format to csv format;
 \end{enumerate}
 documented\_outputs: results of the modules with the real data.
+\end{comment}
+
 \newpage
-\paragraph{\textbf{1.NER regex:}}
-\begin{itemize}
-\item{\textbf{what's inside:}}
-it contains the main script *ner\_regex.py* and the *Dataset* folder.
-The Dataset folder is provided with an example *"soa.csv" input file* containing documents.
-\item{\textbf{usage:}}
+\paragraph{\textbf{1.NER regex}}
+It contains the main script "ner\_regex.py" and the "Dataset" folder.
+The Dataset folder is provided with an example "soa.csv" input file containing documents.
+\paragraph{\textbf{Usage:}}
 The user can just execute the script ner\_regex.py.
 This module is meant to find text-instances of SOA data and to label them.
-\item{\textbf{output:}}
+\paragraph{\textbf{Output:}}
 a .json1 file containing annotations that describe the retrieved entities.
-\end{itemize}
 %REGEX NER
 	\begin{figure}[ht] % placed here or on the top of page
 		\begin{tikzpicture}[node distance=4cm]
@@ -64,16 +63,14 @@ a .json1 file containing annotations that describe the retrieved entities.
 %\lipsum[2]  % dummy textù
 
 
-\paragraph{\textbf{S2.Dataset splitter}}
-\begin{itemize}
-\item{\textbf{input:}}
-The gold.json1 file is an example of **Ground Truth**. This module takes the gold.json1 and
+\paragraph{\textbf{2.Dataset splitter}}
+\paragraph{\textbf{Input:}}
+The gold.json1 file is an example of \textbf{Ground Truth}. This module takes the gold.json1 and
 divides creates the docbins that will be used later on for building a NN.
-\item{\textbf{usage:}}
+\paragraph{\textbf{Usage:}}
 Execute the dataset\_splitter.py script
-\item{\textbf{output:}}
+\paragraph{\textbf{Output:}}
 Train.spacy, Dev.spacy, Test.spacy.
-\end{itemize}
 \begin{figure}[ht] % placed here or on the top of page
     % DATASET SPLITTER
     \begin{tikzpicture}[node distance=5cm]
@@ -89,17 +86,18 @@ Train.spacy, Dev.spacy, Test.spacy.
 %\lipsum[2]  % dummy text
 
 \newpage
-\paragraph{\textbf{S3.NER spaCy}}
-\begin{itemize}
-\item{\textbf{inputs: }}the module needs the docbins **train.spacy**,**dev.spacy**,**test.spacy** produced by the Dataset Splitter Module.
-\item{\textbf{usage: }}
-1. execute script 3.0-retrieve-inputs.sh, it will copy the spacy file from the previous module 
-2. 3.1-train.sh: trains a neural network
-3. 3.2-debug.sh: retrieves info on how experienced the NN is.
-4. 3.3-evaluate.sh: tests the NN with the test data of the test.spacy file
-\item{\textbf{outputs: }}
+\paragraph{\textbf{3.NER spaCy}}
+\paragraph{\textbf{Inputs: }}the module needs the docbins "train.spacy","dev.spacy","test.spacy" produced by the Dataset Splitter Module.
+\paragraph{\textbf{Usage: }}
+\begin{enumerate}
+\item execute script 3.0-retrieve-inputs.sh, it will copy the spacy file from the previous module 
+\item 3.1-train.sh: trains a neural network
+\item 3.2-debug.sh: retrieves info on how experienced the NN is.
+\item 3.3-evaluate.sh: tests the NN with the test data of the test.spacy file
+\item 3.4-usage.py
+\end{enumerate}
+\paragraph{\textbf{Outputs: }}
 NN model with debug information and testing results.
-\end{itemize}
 % SPACY NER 
 \begin{figure}[ht] % placed here or on the top of page
     \begin{tikzpicture}[node distance=1cm]
@@ -113,15 +111,14 @@ NN model with debug information and testing results.
         \draw [arrow] (test) -- (module);
         \draw [arrow] (module) -- (stop);
     \end{tikzpicture}
-    \caption{Module 3} % caption
+    \caption{Setup of the NN} % caption
     %\label{fig:diagram}             % for referencing of figure, key select as you wish
     \end{figure}
 %\lipsum[2]  % dummy text
 
 
 
-\paragraph{\textbf{wip model usage}}
-\lipsum[2]  % dummy text
+%\paragraph{\textbf{wip model usage}}
 \begin{figure}[ht]
 % MODEL USAGE
     \begin{tikzpicture}[node distance=5cm]
@@ -131,21 +128,18 @@ NN model with debug information and testing results.
         \draw [arrow] (start) -- (module);
         \draw [arrow] (module) -- (stop);
     \end{tikzpicture}
+	\caption{Usage of the NN} 
 \end{figure}
 
 
 \newpage
 \paragraph{\textbf{Scorer}}
-\begin{itemize}
-\item{\textbf{inputs: }}
-gold.json, describes the Ground Truth
-\item{\textbf{usage: }}
-1. 4.0-retrieve-inputs.sh: retrieves the ner.json1 produced by the  NER
-
-
-2. scorer\_for\_regex\_extracted\_data***: scores the  ner.json1 by comparing it to the gold.json
-\item{\textbf{outputs: }}output-cat-class.json: scores for every category item and classification item
-\end{itemize}
+\paragraph{\textbf{Inputs: }}
+gold.json1, describes the Ground Truth
+\paragraph{\textbf{Usage: }}
+1. 4.0-retrieve-inputs.sh: retrieves the ner.json1 produced by the NER
+2. scorer.py: scores the  ner.json1 by comparing it to the gold.json
+\paragraph{\textbf{Outputs: }}output-cat-class.json: scores for every category item and classification item
 \begin{figure}[ht]
 % SCORER
     \begin{tikzpicture}[node distance=4cm]
@@ -162,11 +156,9 @@ gold.json, describes the Ground Truth
 
 
 \paragraph{\textbf{Json to csv}}
-\begin{itemize}
-\item{\textbf{usage: }}put here the score file derived from the scorer output
-\item{\textbf{run: }}json\_to\_csv.py 
-\item{\textbf{output: }}csv\_tables/ner\_results.csv, describes the scores in a tabular form
-\end{itemize}
+\paragraph{\textbf{Usage: }}put here the score file derived from the scorer output
+\paragraph{\textbf{Run: }}json\_to\_csv.py 
+\paragraph{\textbf{Output: }}csv\_tables/ner\_results.csv, describes the scores in a tabular form
 \begin{figure}[ht]
 % JSON TO CSV
     \begin{tikzpicture}[node distance=5cm]

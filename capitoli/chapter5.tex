@@ -6,6 +6,7 @@
 % PER OTTENERE IL PDF, digitare da terminale
 % ./makepdfplease
 % 
+\chapter[Valutazione dei risultati][]{5. Valutazione dei risultati}
 
 Dopo l'implementazione dei due prototipi, possiamo introdurre la loro valutazione con l'uso della classe Scorer della libreria SpaCy.
 La terminologia Scorer proviene dal mondo del Machine Learning ed indica l'affidabilità della predizione di una data entità in termini di \textbf{precision}, \textbf{recall} e \textbf{accuracy}.
@@ -36,9 +37,9 @@ classificazione.
 
 
 %allora\includegraphics[width=16cm, height=30cm,page=1]{scores-comparisons.pdf} %width=, height=, page=,
-\includegraphics[width=\textwidth,height=\textheight,keepaspectratio, page=1]{confronti.pdf} 
-Si può facilmente notare come molte entità di tipo \textbf{Categoria} vedono valori di precision recall e accuracy migliori nell'approccio
-Machine Learning; questo miglioramento si rivela significativo in circa il 60\% delle entità categoria.
+\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{confronti.pdf} 
+\captionof{figure}{confronto tra l'approccio regex(sinistra) e NN(destra)}
+Si può facilmente notare come molte entità di tipo \textbf{Categoria} vedono valori di precision recall e accuracy migliori nell'approccio Machine Learning; questo miglioramento si rivela significativo in circa il 60\% delle entità categoria.
 Nel restante 40\% delle categorie si registra un peggioramento delle performance del Machine Learning, che in pochi ma significativi casi abbatte a zero le score.
 Questo può essere dovuto alla mancanza di esempi numerosi per tutte le entità: 
 ciò porterebbe il modello a funzionare molto bene nel riconoscere le entità ben rappresentate dalla ground truth,
@@ -49,10 +50,10 @@ Come sottolineato precedentemente, l'approccio NER con regex non ha grandi margi
 in sintesi è un approccio rigido, che in caso di inclusione di nuovi pattern testuali 
 richiederebbe la continua modifica di una regex in forme sempre più complesse, risolvendosi in
 problemi di manutenzione, di testing, di leggibilità e talvolta di sicurezza.
-Nel caso del Machine Learning un task di \acrfull{NER} può avere risultati migliori delle regex, 
+Nel caso del Machine Learning un task di \acrfull{named-entity-recognition} può avere risultati migliori delle regex, 
 ma può soffrire di carenza di esempi per alcune entità.
 Su questa base si potrebbe proporre l'uso combinato degli output di entrambi i modelli: in particolare,
-si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello \acrfull{ml}
+si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello \acrfull{machine-learning}
 , preferendo invece quest'ultimo
 per le entità su cui gli score descrivono prestazioni migliori.
 

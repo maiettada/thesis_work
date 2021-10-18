@@ -15,11 +15,11 @@
 Finora sono state descritte le attestazioni SOA ed è stato chiarito il ruolo fondamentale che queste certificazioni ricoprono negli appalti.
 D'ora in avanti si intende descrivere l'uso di queste attestazioni da parte dei vari attori del mondo degli appalti:
 \begin{enumerate}
-  \item la \textbf{Pubblica Amministrazione}: produce il bando di gara, relativo ad un progetto identificato univocamente dal codice CUP ed eventualmente diviso in lotti, ognuno identificato da un codice CIG; nel bando di gara aggiunge i requisiti di Categorie SOA e le Classifiche economiche SOA, imponendo eventualmente vincoli temporali su tali certificati (\say{L'azienda deve risultare in possesso di tale certificato dal 2020}); il bando viene scritto in formato pdf e pubblicato sul sito dell'ente pubblico ( Comune, Provincia, Regione, Ministero, et cetera), che risulta in questo contesto essere l'appaltante;
-\item l'\textbf{imprenditore}, o qualsivoglia candidato appaltatore: naviga i siti web della Pubblica Amministrazione alla ricerca di bandi di gara; per ogni bando di gara trovato, deve comprendere i requisiti SOA e accertarsi di poterli soddisfare; solo se dotato di idonea attestazione, potrà candidarsi ad essere appaltatore prendendo parte alla gara d'appalto.
+  \item la \textbf{\acrlong{Pubblica Amministrazione}}: produce il bando di gara, relativo ad un progetto identificato univocamente dal codice CUP ed eventualmente diviso in lotti, ognuno identificato da un codice CIG; nel bando di gara aggiunge i requisiti di Categorie SOA e le Classifiche economiche SOA, imponendo eventualmente vincoli temporali su tali certificati (\say{L'azienda deve risultare in possesso di tale certificato dal 2020}); il bando viene scritto in formato pdf e pubblicato sul sito dell'ente pubblico ( Comune, Provincia, Regione, Ministero, et cetera), che risulta in questo contesto essere l'appaltante;
+\item l'\textbf{imprenditore}, o qualsivoglia candidato appaltatore: naviga i siti web della \acrshort{Pubblica Amministrazione} alla ricerca di bandi di gara; per ogni bando di gara trovato, deve comprendere i requisiti SOA e accertarsi di poterli soddisfare; solo se dotato di idonea attestazione, potrà candidarsi ad essere appaltatore prendendo parte alla gara d'appalto.
 \end{enumerate}
 Sia chiaro che la P.A. pubblica anche altre tipologie di documenti, per cui è utile precisare che ci riferiamo a quell'insieme di documenti che descrivono gare e verbali d'appalto:  possiamo riferirci a questo insieme chiamandolo dominio d'appalto.
-In questi due casi d'uso possiamo evidenziare una prima problematica: ogni ente pubblico ha un proprio sito web e la raccolta di documenti di appalti può essere un'attività lunga e dispersiva. Questo problema potrebbe essere risolto da un software di tipo web-crawler che navighi i siti web della pubblica amministrazione e raccolga tutti i documenti del dominio d'appalto in un dataset.
+In questi due casi d'uso possiamo evidenziare una prima problematica: ogni ente pubblico ha un proprio sito web e la raccolta di documenti di appalti può essere un'attività lunga e dispersiva. Questo problema potrebbe essere risolto da un software di tipo web-crawler che navighi i siti web della \acrshort{Pubblica Amministrazione} e raccolga tutti i documenti del dominio d'appalto in un dataset.
 Esiste una seconda problematica da porre: ammesso che abbia a disposizione tutto il dataset del dominio degli appalti, l'imprenditore che è alla ricerca di un bando adatto alla sua specifica certificazione si troverà costretto a verificare per ogni documento se tale certificazione sia sufficiente per essere ammesso al bando; detto in altre parole, dovrà leggere e annotare manualmente tutti i documenti in base alle attestazioni SOA per poi scegliere il bando con l'annotazione SOA desiderata.
 Questa problematica è decisamente noiosa, sia perché la lettura toglie alla persona un ingente tempo di lavoro, sia perché un compito del genere è perfettamente automatizzabile; d'ora in poi ci focalizzeremo su questa attività specifica.
 L'idea di base è permettere alle imprese di migliorare la ricerca di possibili appalti rendendo questi documenti digitalmente navigabili in base alle attestazioni SOA: 
@@ -92,7 +92,7 @@ Classifiche = \{\say{I}, \say{II}, \say{III}, \say{IV}, \say{IV-bis}, \say{V}, \
 \end{center}
 
 In definitiva, il sistema indicherà le informazioni estratte in base all'insieme Categorie e Classifiche così definiti. 
-\subsection{Formato dei dati estratti}
+\paragraph{Formato dei dati estratti:}
 Più in generale, per ogni attestazione SOA che il sistema individuerà in un documento, dovrà indicare varie informazioni:
 \begin{itemize}
     \item la porzione di testo in cui l'attestazione SOA è individuata;
@@ -109,10 +109,10 @@ Quando il sistema collega la stringa "o.g. 1" all'elemento OG-1, sta effettuando
 Il sistema di estrazione dati effettua una classificazione su ogni porzione di testo individuata; ogni porzione di testo può essere collegata alla classe di uno dei valori SOA.
 Tipicamente, in un problema di classificazione l'output può essere valutato come segue:
 \begin{itemize}
-    \item True Positive(TP), se l'elemento è stato assegnato correttamente alla classe;
-    \item False Positive(FP), se l'elemento è stato assegnato erroneamente alla classe;
-    \item True Negative(TN), se l'elemento non è stato assegnato alla classe perché non vi andava assegnato;
-    \item False Negative(FN), se l'elemento non è stato assegnato alla classe ma vi andava assegnato.
+    \item \acrfull{True Positive}, se l'elemento è stato assegnato correttamente alla classe;
+    \item \acrfull{False Positive}, se l'elemento è stato assegnato erroneamente alla classe;
+    \item \acrfull{True Negative}, se l'elemento non è stato assegnato alla classe perché non vi andava assegnato;
+    \item \acrfull{False Negative}, se l'elemento non è stato assegnato alla classe ma vi andava assegnato.
 \end{itemize}
 
 Ogni output del sistema verrà valutato in termini di TP-FP-TN-FN; questo permetterà di calcolare la bontà del sistema in termini di:

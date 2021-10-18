@@ -31,6 +31,9 @@
 \usepackage{amsmath}
 \usepackage{fancyvrb}
 \usepackage{graphicx}
+\usepackage{pdfoverlay,textpos}
+
+
 \usepackage{listings}
 \usepackage{xcolor}
 
@@ -59,10 +62,35 @@
   tabsize=2
 }
 \lstset{style=mystyle}
+
+
+
+
+
+
+
+
 \usepackage[acronym]{glossaries}
 \makeglossaries
-\newacronym{ml}{ML}{Machine Learning}
-\newacronym{NER}{NER}{Named Entity Recognition}
+\newacronym{neural-network}{NN}{Neural Network}
+\newacronym{machine-learning}{ML}{Machine Learning}
+\newacronym{named-entity-recognition}{NER}{Named Entity Recognition}
+\newacronym{natural-language-processing}{NLP}{Natural Language Processing}
+\newacronym{human-in-the-loop}{HITL}{Human In The Loop}
+\newacronym{True Positive}{TP}{True Positive}
+\newacronym{False Positive}{FP}{False Positive}
+\newacronym{True Negative}{TN}{True Negative}
+\newacronym{False Negative}{FN}{False Negative}
+\newacronym{Pubblica Amministrazione}{PA}{Pubblica Amministrazione}
+\newacronym{Codice Identificativo di Gara}{CIG}{Codice Identificativo di Gara}
+\newacronym{Codice Unico di Progetto}{CUP}{Codice Unico di Progetto}
+\input{soa-acronyms.tex}
+
+
+
+
+
+
 %\usepackage[a-1b]{pdfx}
 %\hypersetup{%
 %    pdfpagemode={UseOutlines},
@@ -161,21 +189,18 @@ IN BREVE
 \indici
 \mainmatter
 
-%\titleformat{\chapter}[display]  {\normalfont\bfseries}{}{0pt}{\Large}
-\chapter[Estrazione di dati da testi della pubblica amministrazione][]{1. Estrazione di dati da testi della pubblica amministrazione}
+%\titleformat{\chapter}[display]  {\normalfont\bfseries}{}{0pt}{\Large} %evita la dicitura "capitolo" fornendo solo la numerazione
 \input{capitoli/chapter1.tex}
 
-\chapter[Casi d'uso delle attestazioni SOA][]{2. Casi d'uso delle attestazioni SOA}
 \input{capitoli/chapter2.tex}
 
-\chapter[Impiego delle regular expression][]{3. Impiego delle regular expression}
 \input{capitoli/chapter3.tex}
 
-\chapter[Realizzazione dei prototipi][]{4. Realizzazione dei prototipi}
+
 \input{capitoli/chapter4.tex}
 \input{capitoli/machinelearning.tex}
 
-\chapter[Valutazione dei risultati][]{5. Valutazione dei risultati}
+
 \input{capitoli/chapter5.tex}
 
 \backmatter
