@@ -45,7 +45,7 @@ Questo può essere dovuto alla mancanza di esempi numerosi per tutte le entità:
 ciò porterebbe il modello a funzionare molto bene nel riconoscere le entità ben rappresentate dalla ground truth,
 ma anche a funzionare peggio per tutte le entità meno note.
 Le regex invece, fornendo a priori i pattern di ogni entità, non soffrono della mancanza di esempi. 
-\section{Conclusioni}
+\section{Confronto tra i due prototipi}
 Come sottolineato precedentemente, l'approccio NER con regex non ha grandi margini di miglioramento dell'accuratezza:
 in sintesi è un approccio rigido, che in caso di inclusione di nuovi pattern testuali 
 richiederebbe la continua modifica di una regex in forme sempre più complesse, risolvendosi in
@@ -56,5 +56,54 @@ Su questa base si potrebbe proporre l'uso combinato degli output di entrambi i m
 si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello \acrfull{machine-learning}
 , preferendo invece quest'ultimo
 per le entità su cui gli score descrivono prestazioni migliori.
+
+
+
+\section{Human In The Loop}
+Fin qui il lavoro di \acrshort{societa-soa} extraction ci ha portati a considerare due tecnologie molto diverse per
+approccio e manutenibilità.
+
+In particolare, le \textbf{regex} risultano di risultato immediato poiché in pochi minuti ci consentono di
+svolgere un'estrazione di dati SOA con discreti valori di recall,
+ma soffrono di \textbf{scarsa leggibilità}, manutenzione problematica e decisamente \textbf{error-prone} ;
+nonostante un incoraggiante risultato immediato, non permettono di migliorare in maniera efficiente l'estrazione di 
+entità per tutta una serie di fattori.
+Consideriamo ad esempio il manutentore a cui toccherà estendere la regex in produzione \(reg\_prod\sb{n}\); 
+il suo compito sarà tipicamente quello di trasformare la \(reg\sb{prod}\) in una \(reg\_prod\sb{n+1}\)
+in maniera da includere i nuovi pattern \( p\sb{m+1} , \ldots , p\sb{m+k} \).
+Le domande che ci poniamo sono allora le seguenti:
+Quella vecchia regex \(reg\_prod\sb{n}\) sarà stata fino ad allora documentata per tenere traccia dei
+pattern precedenti \( p\sb{1}, \ldots ,  p\sb{m} \) ?
+Oppure spetterà al programmatore ricordare tutti i singoli pattern che venivano catturati con la precedente versione della regex?
+E la regex avrà dei dati di \textbf{testing}, per verificare che la nuova versione \(reg\_prod\sb{n+1}\)
+non comprometta i pattern fino ad allora accettati?
+Tutte queste domande si ritrovano nell'indagine statistica di \say{Regexes are hard} \cite{RegexesAreHard}, 
+dove la risposta è negativa: le regex vengono usate perlopiù senza documentazione e senza dati di test,
+per cui un sistema basato su sole regex è nel tempo inefficiente nel miglioramento della \acrlong{Precision}.
+
+Al contrario, le reti neurali possono nel tempo \say{imparare meglio} le entità con cui hanno a che fare ma richiedono un consistente lavoro umano di annotazione e classificazione delle entità presenti nei dati stessi;
+in altre parole, mancano dell'immediatezza delle regex ma rendono fattibile il \textbf{fine-tuning} del sistema classificatore.
+
+%\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{grafo_regex.pdf}
+%\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{grafo_nn.pdf}
+%\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{grafo_regexnn.pdf} 
+
+I rispettivi punti di forza e di debolezza delle due metodologie risultano complementari, per cui ha senso combinarli in un
+unico sistema che sfrutti i vantaggi di entrambe, mitigandone gli svantaggi.
+
+
+%\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{grafo_hil.pdf} 
+
+Possiamo dunque configurare l'uso delle componenti regex, \acrshort{machine-learning}, task di creazione regex e task di 
+annotazione manuale come un sistema di tipo \acrshort{human-in-the-loop}.
+In tale sistema l'essere umano piò essere utilizzato come programmatore di regex e come annotatore a più riprese successive.
+Partendo dallo studio \say{How to invest my time} \cite{HowToInvestMyTime}, l'indicazione che traiamo per usare al meglio
+il lavoro umano è investire pochi minuti sulla creazione di regex ad alta \acrlong{Recall} per poi far seguire a questa  la correzione umana delle annotazioni prodotte dalla regex stessa.
+Seguendo la convenzione dello studio citato, chiameremo \say{weak labelling} l'estrazione svolta con la regex, che indicheremo con \(RE\sb{WL}\).
+La \textbf{human annotation} prenderà in input le \textbf{weak labels} prodotte con la  \(RE\sb{WL}\)
+e produrrà annotazioni che potremo considerare  affidabili perché verificate da un umano;
+tali annotazioni costituiranno il training set della rete neurale.
+
+
 
 

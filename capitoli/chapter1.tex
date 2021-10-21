@@ -35,8 +35,8 @@
 L'avanzamento tecnologico delle telecomunicazioni negli ultimi decenni ha permesso alle persone di recuperare dati e informazioni provenienti dai luoghi più disparati e ad una velocità di approvvigionamento praticamente nulla: se prima di Internet l'unico modo di ricevere un documento ufficiale era farne richiesta all'ufficio competente, ora le documentazioni possono essere normalmente a disposizione in rete. Gli utenti della rete hanno a disposizione una mole così grande di documenti e informazioni che gli è praticamente impossibile visionare la totalità di questi dati.
 In questo contesto l'esigenza di estrarre dati da documenti è sempre più sentita, soprattutto quando si voglia fare una cernita dei documenti contenenti specifiche informazioni di proprio interesse.
 Questa tesi ha come scopo effettuare un'estrazione di dati da un insieme di documenti della \acrfull{Pubblica Amministrazione}; più precisamente i documenti appartengono al contesto dei bandi pubblici e i dati da cercare sono tutte quelle informazioni che impongono dei requisiti ai possibili partecipanti di gara. 
-In questo contesto si provano approcci tecnologici diversi, nella fattispecie l'uso delle regular expressions e delle reti neurali; di entrambe le tecnologie si delineano punti di forza e svantaggi.
-
+In questo contesto si provano approcci tecnologici diversi, nella fattispecie l'uso delle regular expressions e delle reti neurali; di entrambe le tecnologie si delineano punti di forza e svantaggi, per poi investigare se sia preferibile l'una delle due o se invece sia possibile un compromesso che valorizzi il meglio di entrambe. 
+Nella sezione che segue delineeremo in dettaglio 
 
 %\section{Contesto}
 
@@ -44,7 +44,7 @@ In questo contesto si provano approcci tecnologici diversi, nella fattispecie l'
 Tra le funzioni di uno Stato vi sono la costruzione, la manutenzione e la messa in sicurezza delle infrastrutture di pubblica utilità, quali ad esempio gli edifici pubblici, le reti di telecomunicazione, le strade e gli ospedali di cui beneficiano i cittadini.
 La \acrlong{Pubblica Amministrazione}, dovendo garantire una quantità così grande di infrastrutture, non esegue i lavori direttamente, ma ne delega l'attuazione pratica a delle imprese private con un appalto pubblico.
 L'appalto è un contratto con il quale una parte, detta parte appaltatrice, assume, \say{con organizzazione dei mezzi necessari e con gestione a proprio rischio, l'obbligazione di compiere in favore di un'altra (committente o appaltante) un'opera o un servizio}\cite{basacchi2013codice}.
-Gli appalti pubblici sono dunque un modo per eseguire delle opere pubbliche pagando delle imprese private per la realizzazione vera e propria; la\acrshort{Pubblica Amministrazione} deve però assicurarsi che:
+Gli appalti pubblici sono dunque un modo per eseguire delle opere pubbliche pagando delle imprese private per la realizzazione vera e propria; la \acrshort{Pubblica Amministrazione} deve però assicurarsi che:
 l'impresa abbia le conoscenze per portare a termine l'opera rispettando degli standard tecnici, ossia seguendo la \textbf{regola d'arte};
 l'impresa gestisca i lavori in maniera competitiva, senza comportare sprechi ingiustificati di soldi pubblici;
 l'impresa riesca a reggere lo sforzo finanziario che l'opera comporta, sia per quanto riguarda l'approvvigionamento dei materiali, sia per quanto riguarda il costo del lavoro.
@@ -61,7 +61,8 @@ I documenti che andiamo ad analizzare riportano una serie di informazioni di nos
 
 \section{Lavori e importi}
 La gara d'appalto deve indicare in maniera evidente e inoppugnabile quali competenze tecniche e quali capacità finanziarie sono ritenute requisiti fondamentali per la partecipazione; qualsiasi ambiguità nei requisiti di una gara potrebbe dare adito a ricorsi e quindi a rallentare la gara stessa. 
-Il bisogno di requisiti oggettivi ha motivato l'introduzione di apposite certificazioni fornite dalle Società Organismi di Attestazione (SOA), che prendono il nome di \say{certificati SOA} o \say{attestazioni SOA}.
+Il bisogno di requisiti oggettivi ha motivato l'introduzione di apposite certificazioni fornite dalle 
+\acrfull{societa-soa}, che prendono il nome di \say{certificati SOA} o \say{attestazioni SOA}.
 Tali attestazioni si dividono in due macrogruppi:
 \begin{itemize}
 \item \textbf{Categorie di lavori:} individuano le categorie di opere dal punto di vista tecnico;
@@ -78,80 +79,80 @@ Un bando di gara esprimerà i requisiti di progetto sotto forma di categorie e cl
 
 
 \section{Tassonomia SOA}
-Le Categorie sono suddivise in due macro-categorie: opere generali e opere specializzate,  rispettivamente identificate dagli acronimi OG e OS; sono individuate 13 categorie di Opere Generali e 39 categorie di Opere Specializzate.
+Le Categorie sono suddivise in due macro-categorie: opere generali e opere specializzate,  rispettivamente identificate dagli acronimi \say{OG} e \say{OS}; sono individuate 13 categorie di Opere Generali e 39 categorie di Opere Specializzate.
 Le Classifiche d'importo, in numero di dieci, sono rese come numeri ordinali romani. 
 
 
 \subsection{Categorie di opere generali}
 \begin{itemize}
-  \item OG 1: Edifici civili e industriali
-  \item OG 2: Restauro e manutenzione dei beni immobili sottoposti a tutela
-    \item OG 3: Strade, autostrade, ponti, viadotti, ferrovie, metropolitane
-      \item OG 4: Opere d'arte nel sottosuolo
-     \item OG 5: Dighe
-       \item OG 6: Acquedotti, gasdotti, oleodotti, opere di irrigazione e di evacuazione
-       \item OG 7: Opere marittime e lavori di dragaggio
-         \item OG 8: Opere fluviali, di difesa, di sistemazione idraulica e di bonifica
-      \item OG 9: Impianti per la produzione di energia elettrica
-        \item OG 10: Impianti per la trasformazione alta/media tensione e per la distribuzione di energia elettrica in corrente alternata e continua ed impianti di pubblica illuminazione
-  \item OG 11: Impianti tecnologici
-  \item OG 12: Opere ed impianti di bonifica e protezione ambientale
-  \item OG 13: Opere di ingegneria naturalistica
+  \item \acrshort{OG-1}, \acrlong{OG-1}
+  \item \acrshort{OG-2}, \acrlong{OG-2}
+\item \acrshort{OG-3}, \acrlong{OG-3}
+\item \acrshort{OG-4}, \acrlong{OG-4}
+\item \acrshort{OG-5}, \acrlong{OG-5}
+\item \acrshort{OG-6}, \acrlong{OG-6}
+\item \acrshort{OG-7}, \acrlong{OG-7}
+\item \acrshort{OG-8}, \acrlong{OG-8}
+\item \acrshort{OG-9}, \acrlong{OG-9}
+\item \acrshort{OG-10}, \acrlong{OG-10}
+  \item \acrshort{OG-11}, \acrlong{OG-11}
+  \item \acrshort{OG-12}, \acrlong{OG-12}
+  \item \acrshort{OG-13}, \acrlong{OG-13}
 \end{itemize}
 
 \subsection{Categorie di opere specializzate}
 \begin{itemize}
-  \item OS 1: Lavori in terra
-  \item OS 2-A: Superfici decorate di beni immobili del patrimonio culturale e beni culturali mobili di interesse storico, artistico, archeologico ed etnoantropologico
-  \item OS 2-B: Beni culturali mobili di interesse archivistico e librario
-  \item OS 3: Impianti idrico-sanitario, cucine, lavanderie
-  \item OS 4: Impianti elettromeccanici trasportatori
-  \item OS 5: Impianti pneumatici e antintrusione
-  \item OS 6: Finiture di opere generali in materiali lignei, plastici, metallici e vetrosi
-  \item OS 7: Finiture di opere generali di natura edile e tecnica
-  \item OS 8: Opere di impermeabilizzazione
-  \item OS 9: Impianti per la segnaletica luminosa e la sicurezza del traffico
-  \item OS 10: Segnaletica stradale non luminosa
-  \item OS 11: Apparecchiature strutturali speciali
-  \item OS 12-A: Barriere stradali di sicurezza
-  \item OS 12-B: Barriere paramassi, fermaneve e simili
-  \item OS 13: Strutture prefabbricate in cemento armato
-  \item OS 14: Impianti di smaltimento e recupero rifiuti
-  \item OS 15: Pulizia di acque marine, lacustri, fluviali
-  \item OS 16: Impianti per centrali produzione energia elettrica
-  \item OS 17: Linee telefoniche ed impianti di telefonia
-  \item OS 18-A: Componenti strutturali in acciaio
-  \item OS 18-B: Componenti per facciate continue
-  \item OS 19: Impianti di reti di telecomunicazione e di trasmissioni e trattamento
-  \item OS 20-A: Rilevamenti topografici
-  \item OS 20-B: Indagini geognostiche
-  \item OS 21: Opere strutturali speciali
-  \item OS 22: Impianti di potabilizzazione e depurazione
-  \item OS 23: Demolizione di opere
-  \item OS 24: Verde e arredo urbano
-  \item OS 25: Scavi archeologici
-  \item OS 26: Pavimentazioni e sovrastrutture speciali
-  \item OS 27: Impianti per la trazione elettrica
-  \item OS 28: Impianti termici e di condizionamento
-  \item OS 29: Armamento ferroviario
-  \item OS 30: Impianti interni elettrici, telefonici, radiotelefonici e televisivi
-  \item OS 31: Impianti per la mobilità sospesa
-  \item OS 32: Strutture in legno
-  \item OS 33: Coperture speciali
-  \item OS 34: Sistemi antirumore per infrastrutture di mobilità
-  \item OS 35: Interventi a basso impatto ambientale
+  \item \acrshort{OS-1}, \acrlong{OS-1}
+  \item \acrshort{OS-2-A}, \acrlong{OS-2-A}
+  \item \acrshort{OS-2-B}, \acrlong{OS-2-B}
+  \item \acrshort{OS-3}, \acrlong{OS-3}
+  \item \acrshort{OS-4}, \acrlong{OS-4}
+  \item \acrshort{OS-5}, \acrlong{OS-5}
+  \item \acrshort{OS-6}, \acrlong{OS-6}
+  \item \acrshort{OS-7}, \acrlong{OS-7}
+  \item \acrshort{OS-8}, \acrlong{OS-8}
+  \item \acrshort{OS-9}, \acrlong{OS-9}
+  \item \acrshort{OS-10}, \acrlong{OS-10}
+  \item \acrshort{OS-11}, \acrlong{OS-11}
+  \item \acrshort{OS-12-A}, \acrlong{OS-12-A}
+  \item \acrshort{OS-12-B}, \acrlong{OS-12-B}
+  \item \acrshort{OS-13}, \acrlong{OS-13}
+  \item \acrshort{OS-14}, \acrlong{OS-14}
+  \item \acrshort{OS-15}, \acrlong{OS-15}
+  \item \acrshort{OS-16}, \acrlong{OS-16}
+  \item \acrshort{OS-17}, \acrlong{OS-17}
+  \item \acrshort{OS-18-A}, \acrlong{OS-18-A}
+  \item \acrshort{OS-18-B}, \acrlong{OS-18-B}
+  \item \acrshort{OS-19}, \acrlong{OS-19}
+  \item \acrshort{OS-20-A}, \acrlong{OS-20-A}
+  \item \acrshort{OS-20-B}, \acrlong{OS-20-B}
+  \item \item \acrshort{OS-21}, \acrlong{OS-21}
+  \item \acrshort{OS-22}, \acrlong{OS-22}
+  \item \acrshort{OS-23}, \acrlong{OS-23}
+  \item \acrshort{OS-24}, \acrlong{OS-24}
+  \item \acrshort{OS-25}, \acrlong{OS-25}
+  \item \acrshort{OS-26}, \acrlong{OS-26}
+  \item \acrshort{OS-27}, \acrlong{OS-27}
+  \item \acrshort{OS-28}, \acrlong{OS-28}
+  \item \acrshort{OS-29}, \acrlong{OS-29}
+  \item \acrshort{OS-30}, \acrlong{OS-30}
+  \item \acrshort{OS-31}, \acrlong{OS-31}
+  \item \acrshort{OS-32}, \acrlong{OS-32}
+  \item \acrshort{OS-33}, \acrlong{OS-33}
+  \item \acrshort{OS-34}, \acrlong{OS-34}
+  \item \acrshort{OS-35}, \acrlong{OS-35}
 \end{itemize}
 
 \subsection{Classifiche importo }
 \begin{itemize}
-  \item I classifica: fino a euro 258.000
-  \item II classifica: fino a euro 516.000
-  \item III classifica: fino a euro 1.033.000
-  \item III bis classifica: fino a euro 1.500.000
-  \item IV classifica: fino a euro 2.582.000
-  \item IV bis classifica: fino a euro 3.500.000
-  \item V classifica: fino a euro 5.165.000
-  \item VI classifica: fino a euro 10.329.000
-  \item VII classifica: fino a euro 15.494.000
-  \item VIII classifica: oltre euro 15.494.000
+  \item \acrshort{I}, \acrlong{I}
+  \item \acrshort{II}, \acrlong{II}
+  \item \acrshort{III}, \acrlong{III}
+  \item \acrshort{III-bis}, \acrlong{III-bis}
+  \item \acrshort{IV}, \acrlong{IV}
+  \item \acrshort{IV-bis}, \acrlong{IV-bis}
+  \item \acrshort{V}, \acrlong{V}
+  \item \acrshort{VI}, \acrlong{VI}
+  \item \acrshort{VII}, \acrlong{VII}
+  \item \acrshort{VIII}, \acrlong{VIII}
 \end{itemize}  
