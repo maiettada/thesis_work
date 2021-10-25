@@ -6,7 +6,7 @@
 \documentclass[
 ,cucitura
 %,twoside
-%,12pt
+,corpo=13pt
 ]{toptesi}
 
 %\usepackage[a-1b]{pdfx}
@@ -63,6 +63,20 @@
   tabsize=2
 }
 \lstset{style=mystyle}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{tcolorbox}
+\usetikzlibrary{shapes.geometric, arrows, snakes, backgrounds, automata}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+%\tikzstyle{state} = [fill=blue!30]
+\tikzstyle{state}=[circle,draw=blue!50,fill=blue!20,thick]
+\tikzstyle{transition}=[rectangle,draw=black!50,fill=black!20,thick]
+
 
 
 

@@ -91,8 +91,46 @@ in altre parole, mancano dell'immediatezza delle regex ma rendono fattibile il \
 I rispettivi punti di forza e di debolezza delle due metodologie risultano complementari, per cui ha senso combinarli in un
 unico sistema che sfrutti i vantaggi di entrambe, mitigandone gli svantaggi.
 
+% HIL DIAGRAM
+\includegraphics[trim= 10 200 0 100, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{flow_chart_hil.pdf} 
+\caption{Human In The Loop framework} 
+\begin{comment}
 
-%\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{grafo_hil.pdf} 
+	\begin{figure}[ht] % placed here or on the top of page
+		\begin{tikzpicture}[node distance=3cm]
+		%\begin{tikzpicture}%[->,shorten >=1pt,auto,node distance=2.8cm,semithick]
+			\node (data) [state] {Data};
+			\node (module0) [process, below=1cm of data] {regex\_ner};
+			\draw [arrow] (data) -- (module0);
+			\node (wl) 		[state, below=1cm of module0] {wl};
+			\draw [arrow] (module0) -- (wl);
+			\node (humcorr) [process, below=1cm of wl] {human\_correc};
+			\draw [arrow] (wl) -- (humcorr);
+			\node (l) 		[state, left of=humcorr] {labels};
+			\draw [arrow] (humcorr) -- (l);
+			\node (train) 	[process, below of=l] {training};
+			\draw [arrow] (l) -- (train);
+			\node (nn) 		[state, below of=train] {nn};
+			\draw [arrow] (train) -- (nn);
+			\node (module) [process, right of=nn] {nn\_usage};
+			\draw [arrow] (nn) -- (module);
+			\node (entities) [state, below of=module] {Entities};
+			\node (entitiescorr) [state, above of=module] {Entities};
+			\draw [arrow] (module) -- (entities);
+			\draw [arrow] (module) -- (entitiescorr);
+			\draw [arrow] (entitiescorr) -- (humcorr);
+			
+\begin{pgfonlayer}{background}
+\filldraw [fill=black!30,draw=red] (3,-5) rectangle (-5,-13.5);
+%\filldraw [fill=black!30,draw=red] (nn.south -| nn.west) rectangle (humcorr.north -| entitiescorr.east);
+\end{pgfonlayer}
+		\end{tikzpicture}
+		\caption{Human In The Loop framework} % caption
+		%\label{fig:diagram}             % for referencing of figure, key select as you wish
+	\end{figure}
+\end{comment}
+
+
 
 Possiamo dunque configurare l'uso delle componenti regex, \acrshort{machine-learning}, task di creazione regex e task di 
 annotazione manuale come un sistema di tipo \acrshort{human-in-the-loop}.
