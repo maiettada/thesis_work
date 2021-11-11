@@ -30,10 +30,10 @@ La ricerca di attestazioni SOA in un testo è un problema di \textbf{Entity Extra
 Dato un insieme di documenti in formato testuale appartenenti al dominio delle gare d'appalto, estrarre le attestazioni SOA ivi menzionate.
 }
 
-\section{Impostazione del problema}
+\section{Valori testuali ricercati}
 %\subsection{Insiemi di valori}
 L'impostazione del problema inizia con la definizione degli insiemi di valori possibili;
-nel caso delle attestazioni SOA, seguendo la tassonomia esposta definiamo l'insieme delle Categorie e l'insieme delle Classifiche\ldots linear:
+nel caso delle attestazioni SOA, seguendo la tassonomia esposta definiamo l'insieme delle Categorie e l'insieme delle Classifiche\ldots:
 \begin{center}
 \textbf{Categorie} = \{\say{OG-1},\say{OG-2}, \ldots ,  \say{OG-13},
  \say{OS-1},\say{OS-2},, \ldots ,  \say{OS-35} \}
@@ -75,6 +75,33 @@ Più in generale, per ogni attestazione SOA che il sistema individuerà in un docu
 \end{itemize}
 
 \paragraph{soa\_extracted\_tuple} = [  (\textit{start\_offset\_cat}, \textit{end\_offset\_cat}), (\textit{cat}, \textit{class}), \textit{score})]
+
+\section{Foundation model}
+Una volta considerati i dati in questione, dobbiamo articolarli in un modello fondativo in cui 
+abbia senso operare. I \textit{foundation model} più comuni sono quelli che contemplano entità come
+\say{Organization}, \say{Location}, \say{Person}, ognuna delle quali copre molte istanze testuali 
+con informazioni diverse. Ad esempio, nelle seguenti frasi:
+\begin{itemize}
+\item \say{L'ONU si riunirà per discutere dell'emergenza climatica mondiale.}
+\item \say{La Caritas metterà a disposizione ulteriori posti letto per i senzatetto.}
+\item \say{La FIGC agisce attraverso i comitati regionali e le delegazioni provinciali e locali.}
+\end{itemize}
+le diciture \say{L'ONU}, \say{La Caritas} e \say{La FIGC} sono entità  \say{Organization}.
+
+Nel nostro specifico caso abbiamo due entità che possiamo chiamare \say{CATEGORIA-SOA} e \say{CLASSIFICA-SOA},
+ma al loro interno dobbiamo fare delle opportune distinzioni:
+tra diversi tipi di \say{CATEGORIA-SOA}
+e tra diversi tipi di \say{CLASSIFICA-SOA}.
+Questo ci impone di contemplare nel \textbf{foundation model} non solo l'entità, ma anche il tipo, che 
+vincola il sistema NER a riconoscere una specifica gamma di dati. 
+\paragraph{Definiamo come segue le entità del Foundation Model:}
+\begin{itemize}
+\item entity \say{CATEGORIA-SOA}, comprendente gli entity type
+\say{OG-1} , \ldots , \say{OG-13}, \say{OS-1}, \ldots , \say{OS-35} come definiti al  \ref{CATEGORIE};
+\item entity \say{CLASSIFICA-SOA}, comprendente gli entity type \say{I}, \say{II} , \ldots ,  \say{VIII} come definiti al  \ref{CLASSIFICHE}.
+\end{itemize}
+
+
 
 \section{Valutazione dei dati estratti}
 Quando il sistema collega la stringa "o.g. 1" all'elemento OG-1, sta effettuando una classificazione: sta classificando un dato come appartenente alla classe delle istanze di OG-1.

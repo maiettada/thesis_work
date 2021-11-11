@@ -70,7 +70,22 @@ Infine la procedura svolta è descrivibile a grandi linee come segue:
 
 
 \section{Ricerca e classificazione delle attestazioni SOA}
-\begin{enumerate}
+Analizzando un documento testuale, possiamo con poche regex raccogliere la maggior parte dei dati di nostro interesse.
+I dati \acrshort{societa-soa} precedentemente illustrati hanno infatti una certa regolarità nei nomi:
+per raccogliere le categorie, ci basterà trovare tutte le parole aventi per prefissi \say{OS} e \say{OG}; non tutte le
+parole contenenti questi due prefissi sono automaticamente dati SOA, ma partiamo da questi match per isolare delle porzioni di testo che costituiranno le \textit{finestre d'interesse} da verificare.
+In tali finestre andremo a verificare che i dati descrivano effettivamente delle sigle SOA e andremo a cercare le
+classifiche economiche.
+Schematizziamo di seguito il funzionamento dell'estrazione dati e classificazione con regex.
+
+	\begin{figure}[ht]
+	\includegraphics[scale=0.50]{regex_complete.png}
+	\caption{Human In The Loop framework} % caption
+		%\label{fig:diagram}             % for referencing of figure, key select as you wish
+	\end{figure}
+	
+
+\begin{comment}
 \item identifico una finestra di testo di mio interesse; 
 \item all'interno della finestra ricerco istanze delle singole categorie e classifiche;
 \item per ogni categoria c individuata, effettuo la normalizzazione normalised\_category(c),
@@ -83,7 +98,10 @@ Infine la procedura svolta è descrivibile a grandi linee come segue:
 \item per ogni "finestra" di testo, raccolgo le attestazioni individuate e relativi offset (start\_offset, end\_offset) interni al documento;
 \item Scrivo l'ouput in un apposito file csv. Per ogni finestra di testo,
    stampo istanze SOA individuate e relative coppie (start\_offset, end\_offset).
-\end{enumerate}
+\end{comment}
+
+
+
 L'output di questo prototipo-regex mostra delle limitazioni e dei casi tipici di errore:
 in alcune istanze testuali può capitare che una categoria sia menzionata con un nome leggermente diverso da quello canonico (ad es. \say{OS-18}, laddove le alternative accettabili sono \say{OS-18A} e \say{OS-18B}).
 In questi casi il filtering, la normalizzazione e anche le regex possono essere leggermente modificate per riconoscere come accettabili tali valori testuali; però modifiche ripetute alle regex possono portare le stesse a diventare incomprensibili e ad essere error-prone.
@@ -91,6 +109,7 @@ In questi casi il filtering, la normalizzazione e anche le regex possono essere 
 In definitiva, le regex hanno il vantaggio di produrre dei risultati immediati, ma non molto adatti a testi troppo variegati
 Di seguito do un po' di dettagli sulle regex usate relativamente alle categorie e alle classifiche economiche.
 
+\newpage
 
 \section{Finestre, espressioni regolari, filtering}
 
