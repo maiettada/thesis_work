@@ -8,55 +8,50 @@
 % 
 \chapter[Valutazione dei risultati][]{5. Valutazione dei risultati}
 
-Dopo l'implementazione dei due prototipi, possiamo introdurre la loro valutazione con l'uso della classe Scorer della libreria SpaCy.
-La terminologia Scorer proviene dal mondo del Machine Learning ed indica l'affidabilità della predizione di una data entità in termini di \textbf{precision}, \textbf{recall} e \textbf{accuracy}.
-
-\section{Scorer Class}
-Lo Scorer è la classe fornita da SpaCy per valutare le performance di un modello annotatore per ogni singola entità basandosi sulle 
-annotazioni prodotte da tale modello.
-Lo Scorer richiede all'utente della libreria di avere a disposizione l'output del modello annotatore e le gold annotations della Ground Truth.
-Per ogni annotazione si crea un oggetto spacy.Span e si crea una lista di Span, che chiameremo labelled\_entities\_span\_list; si potrà poi utilizzare la lista di gold annotations per creare il relativo \textbf{item} che descrive l'annotazione di un documento:
-
-\begin{lstlisting}[language=Python, caption=Esempio di item]
-item = Example.from_dict(labelled_entities_span_list, 
-                         {"entities": [[start_offset, end_offset, word]
-                                      for [start_offset, end_offset, word]
-                                      in gold_annots]})
-\end{lstlisting}
-
-Si crea un Example per ogni documento annotato e si pongono gli item in una \textbf{item\_list}.
-Tutti i dati annotati dal modello annotatore sono ora nella item list ed è dunque possibile invocare 
-il task di score vero e proprio:
-\begin{lstlisting}[language=Python]
-    scores = scorer.score(item_list)
-\end{lstlisting}
-
-\section{Confronto tra i due approcci}
-Nella tabella scores-comparisons.pdf riporta i valori di Precision, Recall e Accuracy ottenuti per ogni entità contemplata nel task di 
-classificazione.
+Dopo l'implementazione dei prototipi NER-regex e NER-ML, possiamo introdurre la loro valutazione con l'uso di un apposito Scorer.
+Dato un sistema NER, lo Scorer fornisce delle misure di affidabilità dell'NER stesso in termini di \textbf{precision}, \textbf{recall} e \textbf{accuracy}.
 
 
-%allora\includegraphics[width=16cm, height=30cm,page=1]{scores-comparisons.pdf} %width=, height=, page=,
-\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{confronti.pdf} 
-\captionof{figure}{confronto tra l'approccio regex(sinistra) e NN(destra)}
-Si può facilmente notare come molte entità di tipo \textbf{Categoria} vedono valori di precision recall e accuracy migliori nell'approccio Machine Learning; questo miglioramento si rivela significativo in circa il 60\% delle entità categoria.
-Nel restante 40\% delle categorie si registra un peggioramento delle performance del Machine Learning, che in pochi ma significativi casi abbatte a zero le score.
-Questo può essere dovuto alla mancanza di esempi numerosi per tutte le entità: 
+
+\section{Confronto tra regex e ML}
+Nella tabella scores-comparisons.pdf\ref{fig:v1-nums} riportiamo i valori di Precision, Recall e Accuracy ottenuti per ogni entità contemplata nel task di classificazione, sia nel caso di NER-regex che nel caso NER-ML.
+Le regex considerate sono le seguenti:
+ \[regex-soa\sb{wl-v1}=\textsc{\char13}O(S|G)(\\d\\d?)\textsc{\char13} \]  \[ regex-class\sb{wl-v1}=\textsc{\char13}(IV|IV|III|II|IX|VIII|VII|VI|X|V|I)\textsc{\char13} \]
+
+
+
+Si può facilmente notare come molte entità di tipo \textbf{Categoria} vedono valori di precision recall e accuracy migliori nell'approccio Machine Learning; in particolare sono stati evidenziati in verde i valori di precision, recall ed f1-score che in NER-ML superano almeno dello 0.05 i corrispondenti valori registrati dall'NER-regex. 
+In un caso (entity type OG-4) si registra un peggioramento delle performance del Machine Learning, che abbatte a zero le score.
+Questo può essere spiegato con la mancanza di esempi numerosi per alcune entità: 
 ciò porterebbe il modello a funzionare molto bene nel riconoscere le entità ben rappresentate dalla ground truth,
 ma anche a funzionare peggio per tutte le entità meno note.
-Le regex invece, fornendo a priori i pattern di ogni entità, non soffrono della mancanza di esempi. 
 
-Come sottolineato precedentemente, l'approccio NER con regex non ha grandi margini di miglioramento dell'accuratezza:
+\includegraphics[trim=0 300 0 0, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{ConfrontiNumerici+ - v1.pdf} 
+\captionof{figure}{confronto tra l'approccio regex(sinistra) e NN(destra)}
+\label{fig:v1-nums}
+
+Come sottolineato precedentemente, l'approccio NER-regex non ha grandi margini di miglioramento dell'accuratezza:
 in sintesi è un approccio rigido, che in caso di inclusione di nuovi pattern testuali 
 richiederebbe la continua modifica di una regex in forme sempre più complesse, risolvendosi in
 problemi di manutenzione, di testing, di leggibilità e talvolta di sicurezza.
 Nel caso del Machine Learning un task di \acrfull{named-entity-recognition} può avere risultati migliori delle regex, 
-ma può soffrire di carenza di esempi per alcune entità.
+anche se può inizialmente soffrire di scarsa numerosità di entities.
 Su questa base si potrebbe proporre l'uso combinato degli output di entrambi i modelli: in particolare,
 si potrebbe ricorrere al modello regex per le entità meno assimilate dal modello \acrfull{machine-learning}
-, preferendo invece quest'ultimo
-per le entità su cui gli score descrivono prestazioni migliori.
+, preferendo invece quest'ultimo per le entità su cui gli score descrivono prestazioni migliori.
 
+Nell'istogramma in figura \ref{fig:v1-hist} si confrontano le medie di P,R,F1 nel caso della regex e nel caso
+dell'NER-ML. Le regex fin qui considerate sono regex non complicate, possono certamente essere migliorate per coprire
+una casistica di scritture più estesa: prevedendo degli spazi aggiuntivi, prevedendo separatori alternativi e prevedendo 
+l'uso combinato di lettere maiuscole e minuscole.
+Tuttavia, come sottolineato precedentemente, caratteristica fondamentale dei dati è essere usati nella letteratura 
+burocratica: in quest'ambito, colui che scrive il documento formale può ad esempio scrivere \say{OG4}, ma anche \say{Opera Generale numero quattro} e ancora \say{Op.Gen.num.4}, per cui risulta ingiustificato investire tempo per ottenere una regex \say{ottimale}.
+Un'alternativa potrebbe nascere dalla combinazione dell'uso del NER-regex e del NER-ML.
+
+\includegraphics[clip, width=0.6\textwidth,height=0.6\textheight,keepaspectratio, page=1]{regex-v1-vs-ml.pdf} 
+%	\captionof{figure}{confronto tra l'approccio regex(sinistra) e NN(destra)}
+\caption{Da sinistra: Valori di P,R,F del NER-regex-v1 e del NER-ML}
+\label{fig:v1-hist}
 
 
 \section{Human In The Loop}
@@ -179,8 +174,8 @@ del sistema NER-ML costruito sulla \textit{ground truth} \[[P,R,F]\sb{NER-ML}= [
 
 
 \center
-\includegraphics[width=0.9\linewidth, height=6cm]{PlotFunctionData_hitl_vs_ml.pdf}
-\caption{Grafico comparativo di NER-HITL-v1 e NER-ML}
+\includegraphics[]{PlotFunctionData_hitl_vs_ml_notitle.pdf}
+\caption{p,r,f1-score di NER-HITL-v1 e di NER-ML}
 \label{fig:ist}
 \center
 % ML 0.847669252797008	0.777828714411617	0.797399765346802

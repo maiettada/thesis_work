@@ -53,24 +53,26 @@
 			\node (wl) 		[state, below=1cm of regexner] {\(wl\)};
 			\draw [arrow] (regexner) -- (wl);
 			\node (humcorr) [humprocess, below=1cm of wl] {\(correct\sb{k}(labels\sb{i})\)};
-			\draw [arrow] (wl) --  (humcorr) node[pos=0.7] {\(labels\sb{0}\)};
+			\draw [arrow] (wl) --  (humcorr) ;
 			\node (l) 		[state, below left of=humcorr] {\(labels\sb{i}\)};
 			%\draw [arrow] (humcorr) -- (l);
+			    \draw  (wl) -- node[pos=1.5] {\(labels\sb{0}\)} ++(-2cm,0cm) -| (l) ;
+			%\draw [arrow] (wl) --  ++(-2cm,0cm)-| (l); % node[pos=0.25] {2}  node[pos=0.75] {3};
 			\draw [arrow] (humcorr) --  ++(-2cm,0cm)-| (l); % node[pos=0.25] {2}  node[pos=0.75] {3};
 			\draw [arrow] (l) --  ++(+2cm,0cm)-| (humcorr); % node[pos=0.25] {2}  node[pos=0.75] {3};
 			\node (train) 	[process, below=0.5cm of l] {\(training\)};
 			\draw [arrow] (l) -- (train);
 			\node (nn) 		[state, below=1cm of train] {\(nn\sb{i}\)};
 			\draw [arrow] (train) -- (nn);
-			\node (module) [process, right of=nn] {\(NER\sb{nn}\)};
+			\node (module) [process, right of=nn] {\(NER\sb{NNi}\)};
 			\draw [arrow] (nn) -- (module);
-			\node (entities) [state, below of=module] {\(Entities\)};
+			%\node (entities) [state, below of=module] {\(Entities\)};
 			%\node (entitiescorr) [state, above of=module] {\(labels\sb{i}\)};
-			\draw [arrow] (module) -- (entities);
+			%\draw [arrow] (module) -- (entities);
 			%\draw [arrow] (entitiescorr) -- (humcorr);
 			
 \begin{pgfonlayer}{background}
-\filldraw [fill=black!30,draw=red] (3,-5) rectangle (-5,-13.5);
+\filldraw [fill=black!30,draw=red] (5,-3) rectangle (-5,-13.5);
 %\filldraw [fill=black!30,draw=red] (nn.south -| nn.west) rectangle (humcorr.north -| entitiescorr.east);
 \end{pgfonlayer}
 		\end{tikzpicture}
