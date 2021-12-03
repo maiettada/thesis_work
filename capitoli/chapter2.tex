@@ -76,9 +76,9 @@ Più in generale, per ogni attestazione SOA che il sistema individuerà in un docu
 
 \paragraph{soa\_extracted\_tuple} = [  (\textit{start\_offset\_cat}, \textit{end\_offset\_cat}), (\textit{cat}, \textit{class}), \textit{score})]
 
-\section{Foundation model}
-Una volta considerati i dati in questione, dobbiamo articolarli in un modello fondativo in cui 
-abbia senso operare. I \textit{foundation model} più comuni sono quelli che contemplano entità come
+\section{Dominio del modello}
+Una volta considerati i dati in questione, dobbiamo articolarli in un modello di dominio in cui 
+abbia senso operare. Solitamente i modelli NLP contemplano entità come
 \say{Organization}, \say{Location}, \say{Person}, ognuna delle quali copre molte istanze testuali 
 con informazioni diverse. Ad esempio, nelle seguenti frasi:
 \begin{itemize}
@@ -92,9 +92,9 @@ Nel nostro specifico caso abbiamo due entità che possiamo chiamare \say{CATEGORI
 ma al loro interno dobbiamo fare delle opportune distinzioni:
 tra diversi tipi di \say{CATEGORIA-SOA}
 e tra diversi tipi di \say{CLASSIFICA-SOA}.
-Questo ci impone di contemplare nel \textbf{foundation model} non solo l'entità, ma anche il tipo, che 
+Questo ci impone di contemplare nel \textbf{dominio} non solo l'entità, ma anche il tipo, che 
 vincola il sistema NER a riconoscere una specifica gamma di dati. 
-\paragraph{Definiamo come segue le entità del Foundation Model:}
+\paragraph{Definiamo come segue le entities e gli entity type:}
 \begin{itemize}
 \item entity \say{CATEGORIA-SOA}, comprendente gli entity type
 \say{OG-1} , \ldots , \say{OG-13}, \say{OS-1}, \ldots , \say{OS-35} come definiti al  \ref{CATEGORIE};

@@ -78,7 +78,21 @@
 \tikzstyle{transition}=[rectangle,draw=black!50,fill=black!20,thick]
 
 
+\usepackage{blindtext}
+%Image-related packages
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{wrapfig}
+%------------------------------
 
+%Table-related commands
+\usepackage{array}
+%\usepackage[table]{xcolor}
+\setlength{\arrayrulewidth}{1mm}
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.5}
+\newcolumntype{s}{>{\columncolor[HTML]{AAACED}} p{3cm}}
 
 
 
@@ -98,6 +112,7 @@
 \newacronym{False Negative}{FN}{False Negative}
 \newacronym{Precision}{P}{Precision}
 \newacronym{Recall}{R}{Recall}
+\newacronym{F1-score}{F1}{F1-score}
 \newacronym{Accuracy}{A}{Accuracy}
 \newacronym{Pubblica Amministrazione}{PA}{Pubblica Amministrazione}
 \newacronym{Codice Identificativo di Gara}{CIG}{Codice Identificativo di Gara}

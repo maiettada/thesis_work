@@ -65,21 +65,26 @@ approccio e manutenibilità.
 
 In particolare, le \textbf{regex} risultano di risultato immediato poiché in pochi minuti ci consentono di
 svolgere un'estrazione di dati SOA con discreti valori di recall,
-ma soffrono di \textbf{scarsa leggibilità}, manutenzione problematica e decisamente \textbf{error-prone} ;
+ma soffrono di \textbf{scarsa leggibilità}, manutenzione problematica e risultano perciò decisamente \textbf{error-prone} ;
 nonostante un incoraggiante risultato immediato, non permettono di migliorare in maniera efficiente l'estrazione di 
 entità per tutta una serie di fattori.
-Consideriamo ad esempio il manutentore a cui toccherà estendere la regex in produzione \(reg\_prod\sb{n}\); 
+Consideriamo ad esempio il manutentore a cui toccherà estendere la regex in produzione \(reg\_prod\sb{n}\): 
 il suo compito sarà tipicamente quello di trasformare la \(reg\sb{prod}\) in una \(reg\_prod\sb{n+1}\)
 in maniera da includere i nuovi pattern \( p\sb{m+1} , \ldots , p\sb{m+k} \).
 Le domande che ci poniamo sono allora le seguenti:
+\begin{itemize}
+\item
 Quella vecchia regex \(reg\_prod\sb{n}\) sarà stata fino ad allora documentata per tenere traccia dei
 pattern precedenti \( p\sb{1}, \ldots ,  p\sb{m} \) ?
-Oppure spetterà al programmatore ricordare tutti i singoli pattern che venivano catturati con la precedente versione della regex?
+\item Oppure spetterà al programmatore ricordare tutti i singoli pattern che venivano catturati con la precedente versione della regex?
+\item
 E la regex avrà dei dati di \textbf{testing}, per verificare che la nuova versione \(reg\_prod\sb{n+1}\)
 non comprometta i pattern fino ad allora accettati?
+\end{itemize}
 Tutte queste domande si ritrovano nell'indagine statistica di \say{Regexes are hard} \cite{RegexesAreHard}, 
-dove la risposta è negativa: le regex vengono usate perlopiù senza documentazione e senza dati di test,
-per cui un sistema basato su sole regex è nel tempo inefficiente nel miglioramento della \acrlong{Precision}.
+dove emerge che le best practices dell'uso delle regex sono sistematicamente disattese:
+le regex vengono scritte perlopiù senza aggiungere documentazione e senza dati di test.
+Tutte queste problematiche nel complesso impediscono ad un sistema  basato su regex di essere efficiente nel miglioramento della \acrlong{Precision}.
 
 Al contrario, le reti neurali possono nel tempo \say{imparare meglio} le entità con cui hanno a che fare ma richiedono un consistente lavoro umano di annotazione e classificazione delle entità presenti nei dati stessi;
 in altre parole, mancano dell'immediatezza delle regex ma rendono fattibile il \textbf{fine-tuning} del sistema classificatore.
@@ -93,7 +98,7 @@ unico sistema che sfrutti i vantaggi di entrambe, mitigandone gli svantaggi.
 
 % HIL DIAGRAM
 \includegraphics[trim= 10 200 0 100, clip, width=\textwidth,height=\textheight,keepaspectratio, page=1]{flow_chart_hil.pdf} 
-\caption{Human In The Loop framework} 
+\caption{Framework HITL: fase di addestramento} 
 \begin{comment}
 
 	\begin{figure}[ht] % placed here or on the top of page
@@ -132,16 +137,56 @@ unico sistema che sfrutti i vantaggi di entrambe, mitigandone gli svantaggi.
 
 
 
-Possiamo dunque configurare l'uso delle componenti regex, \acrshort{machine-learning}, task di creazione regex e task di 
+Configuriamo l'uso delle componenti regex, \acrshort{machine-learning}, task di creazione regex e task di 
 annotazione manuale come un sistema di tipo \acrshort{human-in-the-loop}.
-In tale sistema l'essere umano piò essere utilizzato come programmatore di regex e come annotatore a più riprese successive.
+In tale sistema l'essere umano può essere utilizzato come programmatore di regex e come annotatore a più riprese successive.
 Partendo dallo studio \say{How to invest my time} \cite{HowToInvestMyTime}, l'indicazione che traiamo per usare al meglio
-il lavoro umano è investire pochi minuti sulla creazione di regex ad alta \acrlong{Recall} per poi far seguire a questa  la correzione umana delle annotazioni prodotte dalla regex stessa.
-Seguendo la convenzione dello studio citato, chiameremo \say{weak labelling} l'estrazione svolta con la regex, che indicheremo con \(RE\sb{WL}\).
-La \textbf{human annotation} prenderà in input le \textbf{weak labels} prodotte con la  \(RE\sb{WL}\)
-e produrrà annotazioni che potremo considerare  affidabili perché verificate da un umano;
-tali annotazioni costituiranno il training set della rete neurale.
+il lavoro umano è investire pochi minuti sulla creazione di regex ad alta \acrlong{Recall} per poi effettuare la correzione umana delle annotazioni prodotte dalla regex stessa.
+Seguendo la convenzione dello studio citato, chiameremo \say{weak labelling} l'estrazione svolta con la regex, che indicheremo con \(RE\sb{WL}\): le label così prodotte risultano \say{weak}, ossia non verificate e passibili d'errore.
+%La \textbf{human annotation} prenderà in input le \textbf{weak labels} prodotte con la  \(RE\sb{WL}\)
+%e produrrà annotazioni che potremo considerare affidabili perché verificate da un umano;
+%tali annotazioni costituiranno il training set della rete neurale.
+L'attività umana \textbf{\(correct\sb{k}labels\)}, partendo dalle weak labels come input iniziale \(labels\sb{0}\), ad ogni iterazione \textit{i} apporterà \textit{k} correzioni che andranno a formare l'insieme di labels \(labels\sb{i}\). Qualora il ciclo continui, tale insieme i-esimo potrà essere adoperato come input dell'iterazione \textit{i+1}; in caso contrario verrà assunto come training set per istruire la rete neurale.
+
+
+%\begin{left}
+\includegraphics[ clip, width=\textwidth,height=\textheight,keepaspectratio]{PlotFunctionData_30+.pdf} 
+\caption{Human In The Loop: F1-score, Precision e Recall.} 
+\label{fig:hitl}
+%\end{left}
+
+L'uso dello \acrlong{human-in-the-loop} può essere vantaggioso se effettuato in maniera tale da:
+\begin{itemize}
+\item istruire una rete neurale in un tempo minimo di lavoro umano;  
+\item permettere il fine-tuning della rete neurale stessa
+con l'intervento dell'annotatore umano.
+\end{itemize}
+
+Seguendo dunque lo studio già citato, l'operatore umano deve destinare pochi minuti alla realizzazione delle  regex \(RE\sb{WL}\). Nella nostra prova utilizziamo le regex \[regex-soa\sb{wl-v1}=\textsc{\char13}O(S|G)(\\d\\d?)\textsc{\char13} \]  \[ regex-class\sb{wl-v1}=\textsc{\char13}(IV|IV|III|II|IX|VIII|VII|VI|X|V|I)\textsc{\char13} \] realizzate in pochi minuti su un tool di regex-editing liberamente disponibile online. Usando tali regex abbiamo quindi prodotto le weak labels che vanno a formare il dataset iniziale \(labels\sb{0}\);
+per ogni iterazione successiva \(i>0\) vengono 
+ dunque corrette \textit{k} annotazioni weak con \(k=100\). Il grafico \ref{fig:hitl} illustra l'evoluzione del sistema \acrshort{human-in-the-loop} all'aumentare 
+delle correzioni umane apportate alle weak labels: viene
+rappresentato il guadagno in termini di \acrlong{Precision}, \acrlong{Recall} e \acrlong{F1-score}.
+In vari esperimenti analoghi a quello riportato in figura \ref{fig:hitl} si evince come in dieci iterazioni di correzione il %sistema guadagni oltre il 22\% di \acrlong{Precision}, 34\% di \acrlong{Recall} e 32\% di \acrlong{F1-score}.
+sistema valutato in termini di  \acrshort{Precision}, \acrshort{Recall}, \acrshort{F1-score} riporti i guadagni minimi:
+\[\Delta\sb{i=10}(P,R,F1)=(22\%,34\%, 32\%)\]
+È interessante notare come alla settima iterazione correttiva tali guadagni ammontano già al
+\[\Delta\sb{i=7}(P,R,F1)=(21\%,33\%, 31\%)\]
+Portando il discorso ai risultati specifici dell'esperimento al grafico \ref{fig:hitl}, l'iterazione numero dieci porta ai valori \[[P,R,F]\sb{NER-HITL}=[0.8458, 0.7071, 0.7527 ] \] a fronte dei valori 
+del sistema NER-ML costruito sulla \textit{ground truth} \[[P,R,F]\sb{NER-ML}= [0.8476, 0.7778, 0.7973] \]. In figura 
+\ref{fig:ist} possiamo vedere graficamente il confronto tra \textit{NER-HITL} e \textit{NER-ML}.%\includegraphics[ clip, width=\textwidth,height=\textheight,keepaspectratio]{PlotFunctionData_hitl_vs_ml.pdf} \caption{} \label{fig:hitlvsml}
 
 
 
-
+\center
+\includegraphics[width=0.9\linewidth, height=6cm]{PlotFunctionData_hitl_vs_ml.pdf}
+\caption{Grafico comparativo di NER-HITL-v1 e NER-ML}
+\label{fig:ist}
+\center
+% ML 0.847669252797008	0.777828714411617	0.797399765346802
+% p 21 r 33 f 31 segna come iterazione 7
+% p 25 r 34 f 32 (_v1_29_n)
+% p 22 r 38 f 35 (_v1_30_n+)
+% p 25 r 36 f 34 (_v1_30_n)
+% hitl p 0.845849682049472 r 0.707145200862464 f 0.752779411712778
+% gold p 0.847669252797008 r 0.777828714411617 f 0.797399765346802
