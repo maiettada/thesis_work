@@ -167,20 +167,20 @@ Per questo report stati considerati i primi 100 elementi della tabella soa.csv
 
 Gli errori riportati sorgono in maniere diverse: alcuni nascono a livello di regex, alcuni casi sono causati dallo script e dal dizionario fissato nello script; altri ancora dipendono da particolarità del documento.
 
-Categoria non acquisita:
+\paragraph{Categoria non riconosciuta:}
 \begin{Verbatim}
-1. riga   657,  OS "I                
+   riga   657,  OS "I                
    riga 1181, OGI I si ? 105.541,05 | 62,901
    riga 790, OG1IV bis e categoria scorporabile a;
    riga 792, OG1III e categoria scorporabile a;
 
-2. riga 130, "OG  11 di cui"; 
+   riga 130, "OG  11 di cui"; 
    riga 540, OS   21; altre simili: 541,542
-3. riga 135, "OS 12-A, OS 18-A, OS 21  e  OS  2-A"; altre: 382,487, 1159, 1160,1176,1248;
-4. riga 143, "OS.2"; altre: 145, 148, 254;
+   riga 135, "OS 12-A, OS 18-A, OS 21  e  OS  2-A"; altre: 382,487, 1159, 1160,1176,1248;
+   riga 143, "OS.2"; altre: 145, 148, 254;
 \end{Verbatim}
 
-\paragraph{Motivazioni:} 
+\textbf{Motivazioni:} 
 \begin{enumerate}
 \item caratteri estranei a quelli previsti dalla regex;
 \item spaziature non previste nella  soa\_cat\_regex;
@@ -188,59 +188,59 @@ Categoria non acquisita:
 \item nella  cat\_regex non è previsto il carattere di interpunzione \say{.}
 \end{enumerate}
 
-Classifica non acquisita:
+\paragraph{Classifica non acquisita:
 
 \begin{Verbatim}
-1. riga 61, "OS21 nella classe I.";
+   riga 61, "OS21 nella classe I.";
    riga 124,"OG 3 classifica II;";
    riga 371, "OG 3 classifica I;";
    riga 416, OG 12 III;
    riga 1251, OG 3 classifica V;        
    riga 1262, OG1 Classifica I;
-2. riga 825,  "OG1 V OS3 VE OS28IV BIS"     
+   riga 825,  "OG1 V OS3 VE OS28IV BIS"     
 \end{Verbatim}
 
-\paragraph{Motivazioni:} 
+\textbf{Motivazioni:} 
 \begin{enumerate}
 \item errore lato script: lo script seleziona una sottostringa con il carattere finale mancante, causando il mancato match con la class\_regex;
 \item \say{OS3 VE} (dove VE indica \say{V classifica Economica}) non è previsto dalla regex della classifica.
 \end{enumerate}
 
-Sottoclassifica non acquisita:
-1.riga 125, "OS21       |IIIBis     |        ", 'OS-21-?';
-2.riga 127, "OS21    classifica    III   Bis ", ?OS-21-III';
+\paragraph{Sottoclassifica non acquisita:}
+  riga 125, "OS21       |IIIBis     |        ", 'OS-21-?';
+  riga 127, "OS21    classifica    III   Bis ", ?OS-21-III';
   riga 302, "dunque in class. III-bis", viene assunta classifica III; altre: 305,372,374
   riga 338, "IV-bis" assunto come IV; simili: 339,341,827;
 
-motivazioni: 
+\textbf{Motivazioni:} 
 \begin{enumerate}
 \item la class\_regex non accetta "IIIBis" come classifica;
 \item la class\_regex accetta solo la dicitura "IV bis".
 \end{enumerate}
 
-Accettate dalla regex inizialmente, ma scartate perché assenti nel dizionario:
+\paragraph{Categorie non riconosciute dal dizionario:}
 \begin{Verbatim}
-riga 61, "OS 18", "OS18" e simili; altre istanze simili: 177,183,195
+ riga 61, "OS 18", "OS18" e simili; altre istanze simili: 177,183,195
   riga 132, "OS  2"; altre: 134, 147,150,151,248
   riga 131, " OS 12, OS 18,"; altre: 133, 378,379,380,381
   riga 260, "OS12 anziché OS12B in quanto" , OS12 non accettato dal filtering; altre:      265,1253;
   riga 705, ["Os28" si chiede la ], viene estratto Os-28, la "s" minuscola non è accettata dal filtering.
 \end{Verbatim}
 \paragraph{Motivazioni:} 
-sono considerate valide le forme "OS-2A" e "OS-2B", "OS-12A" e "OS-12B",  "OS-18A" e "OS-18B", "OS-20A" e "OS-20B"; assenti nel dizionario, invece, le categorie prive di specifica A/B ("OS-2", "OS-12", "OS-18", "OS-20").
+Sono considerate valide le forme "OS-2A" e "OS-2B", "OS-12A" e "OS-12B",  "OS-18A" e "OS-18B", "OS-20A" e "OS-20B"; assenti nel dizionario, invece, le categorie prive di specifica A/B ("OS-2", "OS-12", "OS-18", "OS-20").
 
 
 
-Valori erronei di classifica economica
+\paragraph{Valori erronei di classifica economica}
 \begin{Verbatim}
 1. Numero romano estraneo
-  riga 802, "OG1" per l'intero importo dell'appalto (e ovviamente per il Lotto II;
-  riga 803, OS14" per il lotto II ;        
-  riga 804, OS22" per il lotto III o eventualmente ricorrere ad ATI o avvalimento?;
+   riga 802, "OG1" per l'intero importo dell'appalto (e ovviamente per il Lotto II;
+   riga 803, OS14" per il lotto II ;        
+   riga 804, OS22" per il lotto III o eventualmente ricorrere ad ATI o avvalimento?;
 2. Altre maiuscole non relative a classifica
-  riga 1100, "OS13 (S.I.O.S. scorporabile e subappaltabile max 30%)        
+   riga 1100, "OS13 (S.I.O.S. scorporabile e subappaltabile max 30%)        
 3. Caratteri estranei
-  riga 828, "OS24 II, OS261 E OS 33 Il) e Visura Camerale e certificazione ISO 9001:2008 ISO 18001:2007       \end{Verbatim}  
+   riga 828, "OS24 II, OS261 E OS 33 Il) e Visura Camerale e certificazione ISO 9001:2008 ISO 18001:2007       \end{Verbatim}  
 
 
 \section{Considerazioni}
@@ -266,7 +266,7 @@ nella stringa \say{OS14 per il lotto II}  la class\_regex troverà un numero roma
 Risolvere questo singolo caso a livello regex -nello specifico, escludere i numeri romani dopo la parola  \say{lotto}- comporta espressioni regolari più complesse, ma non esclude ulteriori  casi di falso-positivo.
 
 
-\section{Superare le limitazioni delle regex col machine learning}
+\section{Superare le limitazioni delle regex}
 In estrema sintesi, la criticità principale dell'approccio usato è 
 affidare il riconoscimento del valore-stringa ad un criterio fissato a priori.
 L'approccio ideale dovrebbe consentire all'operatore umano di aggiungere istanze alla casistica già presente, in modo da:

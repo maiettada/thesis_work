@@ -7,4 +7,29 @@
 % ./makepdfplease
 % 
 
-\chapter[Conclusioni]
+\chapter{Conclusioni}
+Scopo di questa tesi è stato effettuare un task di Named Entity Recognition 
+su documenti provenienti dalla pubblica amministrazione; tale set di documenti,
+rumorosi in un quanto spesso ottenuti via OCR a partire da documenti stampati,
+risulta spesso descrivere gli stessi dati formali con diciture variabili.
+È stata presentata l'implementazione del task di NER con l'uso di regex,
+ma è apparso chiaro come questo approccio risulti difficile da migliorare nel tempo;
+infatti le regex alla modifica risultano error-prone e di difficile manutenzione e documentazione,
+caratteristiche che non aiutano ad esprimere pattern molto variabili.
+D'altro canto è stato presentato un NER che adopera tecniche di supervised deep learning
+e che meglio si adegua ad estrarre dati variabili, a spese tuttavia di un
+ingente tempo umano di annotazione.
+È apparsa dunque conveniente la possibilità di effettuare una \say{weak supervision}
+adoperando un dataset prodotto dal task di NER-regex;
+tale dataset viene prodotto in pochi minuti, dopodiché è sottoposto a cicliche iterazioni di correzione
+da parte di un annotatore umano. Il loop di addestramento così configurato è detto Human In The Loop.
+Abbiamo notato come l'operatore umano sia significativamente più veloce nel compito di 
+\textit{correzione-annotazione} rispetto al compito di produzione di annotazioni \textit{from scratch}.
+Valutando le perfomance di NER-hitl-i al variare dell'iterazione i-esima, è emerso che:
+è possibile ottenere un risultato subottimale con la sola \textit{annotazione-correzione} di 1000 annotazioni,
+sacrificando 7\% di recall ma comunque risparmiando più del 70\% del tempo d'annotazione.
+Infine, portando le iterazioni di NER-hitl-i a 14 è possibile superare le prestazioni di NER-ML,
+adoperando comunque il 10\% di annotazioni in meno e risparmiando un tempo di annotazione pari a 58\%.
+È possibile immaginare dei futuri miglioramenti per lo schema Human In The Loop individuato;
+in particolare si potrebbe fornire all'annotatore una metrica per calcolare quali porzioni di testo
+sono più rumorose e probabilmente più prioritarie rispetto al task di annotazione-correzione .
