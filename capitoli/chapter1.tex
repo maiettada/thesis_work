@@ -32,17 +32,17 @@
 %\ac{IoT} basically refers to ....\\
 
 %\section{Introduzione}
-L'avanzamento tecnologico delle telecomunicazioni negli ultimi decenni ha permesso alle persone di recuperare dati e informazioni provenienti dai luoghi più disparati e ad una velocità di approvvigionamento praticamente nulla: se prima di Internet l'unico modo di ricevere un documento ufficiale era farne richiesta all'ufficio competente, ora le documentazioni possono essere normalmente a disposizione in rete. Gli utenti della rete hanno a disposizione una mole così grande di documenti e informazioni che gli è praticamente impossibile visionare la totalità di questi dati.
-In questo contesto l'esigenza di estrarre dati da documenti è sempre più sentita, soprattutto quando si voglia fare una cernita dei documenti contenenti specifiche informazioni di proprio interesse.
-Questa tesi ha come scopo effettuare un'estrazione di dati da un insieme di documenti della \acrfull{Pubblica Amministrazione}; più precisamente i documenti appartengono al contesto dei bandi pubblici e i dati da cercare sono tutte quelle informazioni che impongono dei requisiti ai possibili partecipanti di gara. 
-In questo contesto si provano approcci tecnologici diversi, nella fattispecie l'uso delle regular expressions e delle reti neurali; di entrambe le tecnologie si delineano punti di forza e svantaggi, per poi investigare se sia preferibile l'una delle due o se invece sia possibile un compromesso che valorizzi il meglio di entrambe. 
-Nella sezione che segue delineeremo in dettaglio 
+
 
 %\section{Contesto}
 
-\section{Gare d'appalto}
+
 Tra le funzioni di uno Stato vi sono la costruzione, la manutenzione e la messa in sicurezza delle infrastrutture di pubblica utilità, quali ad esempio gli edifici pubblici, le reti di telecomunicazione, le strade e gli ospedali di cui beneficiano i cittadini.
-La \acrlong{Pubblica Amministrazione}, dovendo garantire una quantità così grande di infrastrutture, non esegue i lavori direttamente, ma ne delega l'attuazione pratica a delle imprese private con un appalto pubblico.
+La \acrlong{Pubblica Amministrazione}, dovendo garantire una quantità così grande di infrastrutture, non esegue i lavori direttamente, ma ne delega l'attuazione pratica a delle imprese private scelte con una pubblica gara d'appalto.
+Nel presente capitolo partiamo dallo scenario degli appalti per introdurre i dati SOA, che saranno oggetto della 
+nostra ricerca.
+
+\section{Gare d'appalto}
 L'appalto è un contratto con il quale una parte, detta parte appaltatrice, assume, \say{con organizzazione dei mezzi necessari e con gestione a proprio rischio, l'obbligazione di compiere in favore di un'altra (committente o appaltante) un'opera o un servizio}\cite{basacchi2013codice}.
 Gli appalti pubblici sono dunque un modo per eseguire delle opere pubbliche pagando delle imprese private per la realizzazione vera e propria; la \acrshort{Pubblica Amministrazione} deve però assicurarsi che:
 l'impresa abbia le conoscenze per portare a termine l'opera rispettando degli standard tecnici, ossia seguendo la \textbf{regola d'arte};
@@ -65,7 +65,7 @@ Il bisogno di requisiti oggettivi ha motivato l'introduzione di apposite certifi
 \acrfull{societa-soa}, che prendono il nome di \say{certificati SOA} o \say{attestazioni SOA}.
 Tali attestazioni si dividono in due macrogruppi:
 \begin{itemize}
-\item \textbf{Categorie di lavori:} individuano le categorie di opere dal punto di vista tecnico;
+\item \textbf{Categorie di opere:} individuano le categorie di lavori dal punto di vista tecnico;
 \item \textbf{Classifiche di importi:} individuano i livelli di capacità finanziaria.
 \end{itemize}
 Un bando di gara esprimerà i requisiti di progetto sotto forma di categorie e classifiche SOA, per cui un'azienda che voglia  essere ammessa alla gara dovrà possedere le attestazioni SOA richieste.
@@ -143,7 +143,7 @@ Le Classifiche d'importo, in numero di dieci, sono rese come numeri ordinali rom
   \item \acrshort{OS-35}, \acrlong{OS-35}
 \end{itemize}
 
-\subsection{Classifiche importo }\label{CLASSIFICHE}
+\subsection{Classifiche di importi }\label{CLASSIFICHE}
 \begin{itemize}
   \item \acrshort{I}, \acrlong{I}
   \item \acrshort{II}, \acrlong{II}

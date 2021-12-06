@@ -31,13 +31,13 @@ Per l'acquisizione di dati si è adoperata la libreria Pandas: questa consente di
 dataframe = pd.read_csv(filepath, sep=',')
 \end{Verbatim}
 
-Una volta importato il csv in un dataframe, accedo al dataframe esattamente come se fosse una matrice; di seguito il codice per stampare il primo elemento del campo testo:
+Una volta importato il csv in un dataframe, accediamo al dataframe esattamente come se fosse una matrice; di seguito il codice per stampare il primo elemento del campo testo:
 
 \begin{Verbatim}
 print(dataframe['testo'][0])
 \end{Verbatim}
 
-Una volta estratti gli elementi di testo del dataframe, posso applicare le espressioni regolari alla ricerca delle attestazioni SOA su ogni singolo testo.
+Una volta estratti gli elementi di testo del dataframe, possiamo applicare le espressioni regolari alla ricerca delle attestazioni SOA su ogni singolo testo.
 
 \section{Raccolta e filtraggio di istanze}
 L'individuazione e la classificazione di attestazioni SOA da un testo richiedono due azioni: 
@@ -106,8 +106,8 @@ L'output di questo prototipo-regex mostra delle limitazioni e dei casi tipici di
 in alcune istanze testuali può capitare che una categoria sia menzionata con un nome leggermente diverso da quello canonico (ad es. \say{OS-18}, laddove le alternative accettabili sono \say{OS-18A} e \say{OS-18B}).
 In questi casi il filtering, la normalizzazione e anche le regex possono essere leggermente modificate per riconoscere come accettabili tali valori testuali; però modifiche ripetute alle regex possono portare le stesse a diventare incomprensibili e ad essere error-prone.
 
-In definitiva, le regex hanno il vantaggio di produrre dei risultati immediati, ma non molto adatti a testi troppo variegati
-Di seguito do un po' di dettagli sulle regex usate relativamente alle categorie e alle classifiche economiche.
+In definitiva, le regex hanno il vantaggio di produrre dei risultati immediati, ma non molto adatti a testi troppo variegati.
+Di seguito forniamo una visione più dettagliata sulle regex usate relativamente alle categorie e alle classifiche economiche.
 
 \newpage
 
@@ -309,7 +309,7 @@ Vogliamo dare un'idea di quanti modi diversi esistono per indicare una categoria
 \end{itemize}
 
 È altrettanto possibile che la categoria economica, normalmente espressa in numeri romani, si trovi scritta in modi differenti; vediamo il caso della III categoria, di seguito:\begin{itemize}
-\item categoria III, con importo xyz;
+\item categoria III, con importo fino a euro 1.033.000;
 \item cat.III;
 \item categoria terza; 
 \item cat.III°;
@@ -365,3 +365,23 @@ spacy evaluate output/model-best/ test.spacy --displacy-path . --displacy-limit 
 \paragraph{Uso della rete neurale}
 Dopo avere eseguito i passaggi precedenti che hanno permesso la configurazione e l'addestramento della \acrshort{neural-network}
 il modello può essere adoperato per estrarre entità da documenti di testo.
+
+\paragraph{Scorer Class}
+Lo Scorer è la classe fornita da SpaCy per valutare le performance di un modello annotatore per ogni singola entità basandosi sulle 
+annotazioni prodotte da tale modello.
+Lo Scorer richiede all'utente della libreria di avere a disposizione l'output del modello annotatore e le gold annotations della Ground Truth.
+Per ogni annotazione si crea un oggetto spacy.Span e si crea una lista di Span, che chiameremo labelled\_entities\_span\_list; si potrà poi utilizzare la lista di gold annotations per creare il relativo \textbf{item} che descrive l'annotazione di un documento:
+
+\begin{lstlisting}[language=Python, caption=Esempio di item]
+item = Example.from_dict(labelled_entities_span_list, 
+                         {"entities": [[start_offset, end_offset, word]
+                                      for [start_offset, end_offset, word]
+                                      in gold_annots]})
+\end{lstlisting}
+
+Si crea un Example per ogni documento annotato e si pongono gli item in una \textbf{item\_list}.
+Tutti i dati annotati dal modello annotatore sono ora nella item list ed è dunque possibile invocare 
+il task di score vero e proprio:
+\begin{lstlisting}[language=Python]
+    scores = scorer.score(item_list)
+\end{lstlisting}

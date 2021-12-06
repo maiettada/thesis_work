@@ -202,11 +202,22 @@
 \begin{document}
 \ateneo{Politecnico di Torino}
 \titolo{Estrazione di entità da testi della Pubblica Amministrazione}% per la laurea quinquennale e il dottorato
+\logosede{logopolito}
 \corsodilaurea{Ingegneria Informatica}% per la laurea di primo e secondo livello
 \candidato{Davide \textsc{Maietta}}% per tutti i percorsi
-\relatore{prof.\ Maurizio Morisio}% per la laurea e il dottorato
-\sedutadilaurea{\textsc{Novembre} 2017}% per la laurea triennale
-\logosede{logopolito}
+\relatore{prof. Maurizio Morisio}
+%\secondorelatore{dipl.~ing.~Werner von Braun}
+    \terzorelatore{\tabular{@{}l}
+	\textbf{Correlatore:}\\
+    dott. Giuseppe Rizzo\\[0.5ex]
+	\textbf{Correlatore:}\\
+    dott. Davide Allavena\\
+%	\textbf{Correlatore:}\\
+%    dott.~Mario Rossi\\[0.5ex]
+%	\textbf{Correlatore:}\\
+%    dott.~Piero Neri
+    \endtabular}
+\sedutadilaurea{\textsc{Dicembre} 2021}% per la laurea triennale
 \errorcontextlines=9
 \frontespizio
 \paginavuota
@@ -215,12 +226,14 @@
 \advance\textheight 30mm
 %\begin{dedica}
 %\end{dedica}
-\sommario
-IN BREVE
+%\sommario
+%SARÒ BREVE
 \indici
 \mainmatter
 
 %\titleformat{\chapter}[display]  {\normalfont\bfseries}{}{0pt}{\Large} %evita la dicitura "capitolo" fornendo solo la numerazione
+
+\input{capitoli/introduzione.tex}
 \input{capitoli/chapter1.tex}
 
 \input{capitoli/chapter2.tex}
@@ -233,6 +246,7 @@ IN BREVE
 
 
 \input{capitoli/chapter5.tex}
+\input{capitoli/conclusioni.tex}
 
 \backmatter
 \printglossary[type=\acronymtype]

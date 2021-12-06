@@ -24,7 +24,7 @@ Esiste una seconda problematica da porre: ammesso che abbia a disposizione tutto
 Questa problematica è decisamente noiosa, sia perché la lettura toglie alla persona un ingente tempo di lavoro, sia perché un compito del genere è perfettamente automatizzabile; d'ora in poi ci focalizzeremo su questa attività specifica.
 L'idea di base è permettere alle imprese di migliorare la ricerca di possibili appalti rendendo questi documenti digitalmente navigabili in base alle attestazioni SOA: 
 per l'imprenditore il caso d'uso 2 si ridurrebbe a cercare l'attestazione SOA desiderata per avere tutti e soli i bandi che la contemplino tra i requisiti.
-La ricerca di attestazioni SOA in un testo è un problema di \textbf{Entity Extraction} (\textbf{EE}).
+La ricerca di attestazioni SOA in un testo è un problema di \textbf{Named Entity Recognition} (\textbf{NER}).
 \paragraph{Formulazione del problema:}
 \textit{
 Dato un insieme di documenti in formato testuale appartenenti al dominio delle gare d'appalto, estrarre le attestazioni SOA ivi menzionate.
@@ -36,7 +36,7 @@ L'impostazione del problema inizia con la definizione degli insiemi di valori po
 nel caso delle attestazioni SOA, seguendo la tassonomia esposta definiamo l'insieme delle Categorie e l'insieme delle Classifiche\ldots:
 \begin{center}
 \textbf{Categorie} = \{\say{OG-1},\say{OG-2}, \ldots ,  \say{OG-13},
- \say{OS-1},\say{OS-2},, \ldots ,  \say{OS-35} \}
+ \say{OS-1},\say{OS-2}, \ldots , \say{OS-35}\}
 \end{center}
 
 %\parbox{\textwidth}{
@@ -61,12 +61,12 @@ nel caso delle attestazioni SOA, seguendo la tassonomia esposta definiamo l'insi
 % \say{OS-35} \}
 % }
 \begin{center}
-\textbf{Classifiche} = \{\say{I}, \say{II}, \say{III}, \say{IV}, \say{IV-bis}, \say{V}, \say{VI}, \say{VII}, \say{VIII} \}
+\textbf{Classifiche} = \{\say{I}, \say{II}, \say{III}, \say{IV}, \say{IV-bis}, \say{V}, \say{VI}, \say{VII}, \say{VIII}\}
 \end{center}
 
 In definitiva, il sistema indicherà le informazioni estratte in base all'insieme Categorie e Classifiche così definiti. 
 \paragraph{Formato dei dati estratti:}
-Più in generale, per ogni attestazione SOA che il sistema individuerà in un documento, dovrà indicare varie informazioni:
+Più in generale, per ogni attestazione SOA che il sistema individuerà in un documento, dovranno essere mandate in output le seguenti informazioni:
 \begin{itemize}
     \item la porzione di testo in cui l'attestazione SOA è individuata;
     \item la categoria riconosciuta;
@@ -78,7 +78,7 @@ Più in generale, per ogni attestazione SOA che il sistema individuerà in un docu
 
 \section{Dominio del modello}
 Una volta considerati i dati in questione, dobbiamo articolarli in un modello di dominio in cui 
-abbia senso operare. Solitamente i modelli NLP contemplano entità come
+abbia senso operare. Solitamente i modelli NER contemplano entità come
 \say{Organization}, \say{Location}, \say{Person}, ognuna delle quali copre molte istanze testuali 
 con informazioni diverse. Ad esempio, nelle seguenti frasi:
 \begin{itemize}
@@ -114,18 +114,23 @@ Tipicamente, in un problema di classificazione l'output può essere valutato come
     \item \acrfull{False Negative}, se l'elemento non è stato assegnato alla classe ma vi andava assegnato.
 \end{itemize}
 
-Ogni output del sistema verrà valutato in termini di TP-FP-TN-FN; questo permetterà di calcolare la bontà del sistema in termini di:
+Ogni output del sistema può essere valutato in termini di TP-FP-TN-FN; disponendo del numero di TP-FP-TN-FN è
+poi possibile calcolare alcune metriche che descrivono le performance del sistema:
 
 \paragraph{Precision} = (TP)/(TP + FP )
 \paragraph{Recall} = (TP)/(TP + FN )
 \paragraph{Accuracy} = (TP + TN)/(TP + TN + FP + FN)
+
+L'accuratezza di un sistema è spesso calcolata con la \textit{F1-score}, costituita dalla media armonica di 
+Precision e Recall:
+\paragraph{F1} = (2*P*R)/(P+R)
 
 \section{Ground truth}
 Per ogni istanza di testo assegnato ad una classe, bisogna affermare se la classificazione data costituisce true positive, false positive, true negative o false negative; questo vuol dire che, per valutare la bontà di una classificazione, abbiamo bisogno di stabilire quale sia la classificazione giusta.
 Il sistema che stiamo considerando effettua un'estrazione di dati, classificandoli come elementi delle attestazioni SOA; per valutare la bontà del sistema abbiamo dunque bisogno di stabilire per ogni porzione di testo l'output giusto, ovvero di definire la \textbf{verità} in base alla quale valutare il sistema.
 La \textbf{Ground Truth} è dunque l'output corretto che ci si aspetterebbe dal sistema; e come tale indicherà, per ogni porzione di documento, l'attestazione "giusta" che il sistema avrebbe dovuto estrarre.
 Un sistema di apprendimento dotato di Ground Truth appartiene all'approccio detto \textbf{Apprendimento Supervisionato}. 
-La ground truth verrà poi confrontata con l'output del sistema e permetterà di classificare ogni tupla dell'output come true positive, false positive, true negative, false negative.
+Disponendo di una ground truth, potremo procedere a valutare l'output del sistema e quindi classificare ogni entità in output come true positive, false positive, true negative, false negative.
 Una volta contrassegnata ogni tupla dell'output come \acrshort{True Positive}, \acrshort{False Positive}, \acrshort{True Negative}, \acrshort{False Negative}, sarà possibile calcolare \acrfull{Precision}, \acrfull{Recall} e \acrfull{Accuracy}.
 
 

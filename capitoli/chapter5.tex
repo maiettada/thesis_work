@@ -14,7 +14,7 @@ Dato un sistema NER, lo Scorer fornisce delle misure di affidabilità dell'NER st
 
 
 \section{Confronto tra regex e ML}
-Nella tabella scores-comparisons.pdf\ref{fig:v1-nums} riportiamo i valori di Precision, Recall e Accuracy ottenuti per ogni entità contemplata nel task di classificazione, sia nel caso di NER-regex che nel caso NER-ML.
+Nella tabella scores-comparisons.pdf \ref{fig:v1-nums} riportiamo i valori di Precision, Recall e Accuracy ottenuti per ogni entità contemplata nel task di classificazione, sia nel caso di NER-regex che nel caso NER-ML.
 Le regex considerate sono le seguenti:
  \[regex-soa\sb{wl-v1}=\textsc{\char13}O(S|G)(\\d\\d?)\textsc{\char13} \]  \[ regex-class\sb{wl-v1}=\textsc{\char13}(IV|IV|III|II|IX|VIII|VII|VI|X|V|I)\textsc{\char13} \]
 
@@ -60,11 +60,11 @@ approccio e manutenibilità.
 
 In particolare, le \textbf{regex} risultano di risultato immediato poiché in pochi minuti ci consentono di
 svolgere un'estrazione di dati SOA con discreti valori di recall,
-ma soffrono di \textbf{scarsa leggibilità}, manutenzione problematica e risultano perciò decisamente \textbf{error-prone} ;
+ma soffrono di \textbf{scarsa leggibilità}, manutenzione problematica e risultano perciò decisamente \textbf{error-prone};
 nonostante un incoraggiante risultato immediato, non permettono di migliorare in maniera efficiente l'estrazione di 
 entità per tutta una serie di fattori.
 Consideriamo ad esempio il manutentore a cui toccherà estendere la regex in produzione \(reg\_prod\sb{n}\): 
-il suo compito sarà tipicamente quello di trasformare la \(reg\sb{prod}\) in una \(reg\_prod\sb{n+1}\)
+il suo compito sarà tipicamente quello di trasformare la \(reg\_prod\sb{n}\) in una \(reg\_prod\sb{n+1}\)
 in maniera da includere i nuovi pattern \( p\sb{m+1} , \ldots , p\sb{m+k} \).
 Le domande che ci poniamo sono allora le seguenti:
 \begin{itemize}
@@ -150,6 +150,10 @@ L'attività umana \textbf{\(correct\sb{k}labels\)}, partendo dalle weak labels co
 \label{fig:hitl}
 %\end{left}
 
+Il risultato del loop è l'addestramento della rete neurale n-esima \(nn\sb{n}\) utilizzabile per effettuare il task di 
+\acrshort{named-entity-recognition}.
+
+
 L'uso dello \acrlong{human-in-the-loop} può essere vantaggioso se effettuato in maniera tale da:
 \begin{itemize}
 \item istruire una rete neurale in un tempo minimo di lavoro umano;  
@@ -167,17 +171,50 @@ sistema valutato in termini di  \acrshort{Precision}, \acrshort{Recall}, \acrsho
 \[\Delta\sb{i=10}(P,R,F1)=(22\%,34\%, 32\%)\]
 È interessante notare come alla settima iterazione correttiva tali guadagni ammontano già al
 \[\Delta\sb{i=7}(P,R,F1)=(21\%,33\%, 31\%)\]
-Portando il discorso ai risultati specifici dell'esperimento al grafico \ref{fig:hitl}, l'iterazione numero dieci porta ai valori \[[P,R,F]\sb{NER-HITL}=[0.8458, 0.7071, 0.7527 ] \] a fronte dei valori 
-del sistema NER-ML costruito sulla \textit{ground truth} \[[P,R,F]\sb{NER-ML}= [0.8476, 0.7778, 0.7973] \]. In figura 
-\ref{fig:ist} possiamo vedere graficamente il confronto tra \textit{NER-HITL} e \textit{NER-ML}.%\includegraphics[ clip, width=\textwidth,height=\textheight,keepaspectratio]{PlotFunctionData_hitl_vs_ml.pdf} \caption{} \label{fig:hitlvsml}
-
 
 
 \center
-\includegraphics[]{PlotFunctionData_hitl_vs_ml_notitle.pdf}
-\caption{p,r,f1-score di NER-HITL-v1 e di NER-ML}
+\includegraphics[]{table_deltas.pdf}
+%\includegraphics[]{PlotFunctionData_hitl_vs_ml_notitle.pdf}
+\caption{I valori di p,r,e f1 di NER-HITL-v1 e scarti rispetto a NER-ML}
 \label{fig:ist}
 \center
+
+Portando il discorso ai risultati specifici dell'esperimento al grafico \ref{fig:hitl}, l'iterazione numero dieci porta ai valori \[[P,R,F]\sb{NER-HITL}=[0.8458, 0.7071, 0.7527 ] \] a fronte dei valori 
+del sistema NER-ML costruito sulla \textit{ground truth} \[[P,R,F]\sb{NER-ML}= [0.8476, 0.7778, 0.7973] \]. 
+Possiamo osservare lo stesso specifico esperimento  alla tabella \ref{fig:ist}, dove forniamo anche 
+un calcolo degli scarti tra i valori del NER-ML e i valori dello HITL ad ogni iterazione \textit{i}.
+%width=\textwidth,height=\textheight,keepaspectratio]{PlotFunctionData_hitl_vs_ml.pdf} \caption{} \label{fig:hitlvsml}
+Si nota come le prestazioni di  \(NER-HITL\sb{n}\) tendano a migliorare all'aumentare delle iterazioni \(n\).
+
+\raggedright
+\paragraph{I dataset adoperati}
+Nel caso ML sono state necessarie 2218 annotazioni gold prodotte da un annotatore umano;
+di questo numero di annotazioni totale, 1500 vanno a costituire il training set ML.
+Considerando invece il caso del sistema HITL, il training set adopera 1428 annotazioni gold, 
+di cui 1000 sono impiegate al fine di
+correggere le annotazioni precedentemente prodotte con regex ( 1315 annotazioni prodotte con regex).
+Dunque l'esperimento HITL adopera internamente 790 annotazioni in meno.
+Va considerato però il tempo di produzione delle annotazioni gold e silver:
+se la produzione di un'annotazione gold richiede 14  secondi,
+la correzione di un'annotazione silver richiede soli 6,52 secondi mediamente.
+Confrontando dunque l'impiego di tempo dei due tipi di annotazione:
+2218*14 nel caso ML
+1300*6.52 nel caso HITL
+risulta che abbiamo risparmiato 2218*14-1300* 6.52 = più di 6 ore per la produzione del dataset.
+In questo senso, ricorrere al sistema HITL fa risparmiare una percentuale pari al 72\% del tempo totale di annotazione.
+
+
+\paragraph{HITL-14}
+Proseguendo il ciclo di addestramento del sistema HITL, nell'esperimento descritto in figura \ref{fig:hitl} si ottiene il superamento delle prestazioni del NER-ML all'iterazione \(i=14\).
+Si registrano i  valori:
+\[p=0.8823, r=0.7723, f=0.8141\]
+Per raggiungere l'iterazione 14, è necessario fornire 2000 annotazioni human-corrected.
+La loro produzione richiede un tempo pari a 2000*6.52, che confrontato a annot-time-ML=2218*14 costituisce un
+risparmio del 58\% del tempo di annotazione del NER-ML.
+
+
+
 % ML 0.847669252797008	0.777828714411617	0.797399765346802
 % p 21 r 33 f 31 segna come iterazione 7
 % p 25 r 34 f 32 (_v1_29_n)
@@ -185,3 +222,6 @@ del sistema NER-ML costruito sulla \textit{ground truth} \[[P,R,F]\sb{NER-ML}= [
 % p 25 r 36 f 34 (_v1_30_n)
 % hitl p 0.845849682049472 r 0.707145200862464 f 0.752779411712778
 % gold p 0.847669252797008 r 0.777828714411617 f 0.797399765346802
+
+
+
